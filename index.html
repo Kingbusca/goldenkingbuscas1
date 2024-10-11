@@ -9,14 +9,11 @@
             font-family: Arial, sans-serif;
         }
         #resultado {
+            white-space: pre-wrap;
             background-color: #f8f8f8;
             padding: 10px;
             border: 1px solid #ddd;
             margin-top: 20px;
-            white-space: pre-wrap;
-        }
-        .campo {
-            margin: 5px 0;
         }
     </style>
 </head>
@@ -25,7 +22,7 @@
     <input type="text" id="cnpj" placeholder="Digite o CNPJ">
     <button id="consultar">Consultar</button>
     
-    <div id="resultado"></div>
+    <pre id="resultado"></pre>
     
     <script>
         document.getElementById('consultar').addEventListener('click', function() {
@@ -47,39 +44,32 @@
                 })
                 .then(data => {
                     // Exibe o resultado formatado
-                    const resultadoDiv = document.getElementById('resultado');
-                    resultadoDiv.innerHTML = `
-                        <div class="campo">📅 Abertura: ${data.abertura}</div>
-                        <div class="campo">🔍 Situação: ${data.situacao}</div>
-                        <div class="campo">🏢 Tipo: ${data.tipo}</div>
-                        <div class="campo">🏷️ Nome: ${data.nome}</div>
-                        <div class="campo">🏷️ Fantasia: ${data.fantasia}</div>
-                        <div class="campo">🏛️ Porte: ${data.porte}</div>
-                        <div class="campo">📝 Natureza Jurídica: ${data.natureza_juridica}</div>
-                        <div class="campo">📞 Telefone: ${data.telefone}</div>
-                        <div class="campo">📧 Email: ${data.email}</div>
-                        <div class="campo">🏙️ Logradouro: ${data.logradouro}, ${data.numero} - ${data.bairro} - ${data.municipio} - ${data.uf}, ${data.cep}</div>
-                        <div class="campo">💰 Capital Social: R$ ${data.capital_social}</div>
-                        <div class="campo">📆 Data da Situação: ${data.data_situacao}</div>
-                        <div class="campo">🔄 Última Atualização: ${data.ultima_atualizacao}</div>
-                    `;
-
-                    // Adicionando atividades principais
-                    if (data.atividade_principal && data.atividade_principal.length > 0) {
-                        resultadoDiv.innerHTML += `<div class="campo">💼 Atividade Principal: ${data.atividade_principal[0].text}</div>`;
-                    }
+                    const resultado = `
+📅 Abertura: ${data.abertura}
+🔍 Situação: ${data.situacao}
+🏢 Tipo: ${data.tipo}
+🏷️ Nome: ${data.nome}
+🏷️ Fantasia: ${data.fantasia}
+🏛️ Porte: ${data.porte}
+📝 Natureza Jurídica: ${data.natureza_juridica}
+💼 Atividade Principal: ${data.atividade_principal[0]?.text || 'N/A'}
+📞 Telefone: ${data.telefone}
+📧 Email: ${data.email}
+🏙️ Logradouro: ${data.logradouro}, ${data.numero} - ${data.bairro} - ${data.municipio} - ${data.uf}, ${data.cep}
+💰 Capital Social: R$ ${data.capital_social}
+📆 Data da Situação: ${data.data_situacao}
+🔄 Última Atualização: ${data.ultima_atualizacao}
+👥 Sócios: ${data.qsa.map(socio => `${socio.nome} - ${socio.qual}`).join(', ') || 'N/A'}
+`;
 
                     // Adicionando atividades secundárias
                     if (data.atividades_secundarias && data.atividades_secundarias.length > 0) {
                         const atividadesSecundarias = data.atividades_secundarias.map(atividade => atividade.text).join(', ');
-                        resultadoDiv.innerHTML += `<div class="campo">📋 Atividades Secundárias: ${atividadesSecundarias}</div>`;
+                        resultadoDiv += `📋 Atividades Secundárias: ${atividadesSecundarias}`;
                     }
 
-                    // Adicionando QSA
-                    if (data.qsa && data.qsa.length > 0) {
-                        const socios = data.qsa.map(socio => `${socio.nome} - ${socio.qual}`).join('<br>');
-                        resultadoDiv.innerHTML += `<div class="campo">👥 Sócios: <br>${socios}</div>`;
-                    }
+                    // Atualiza o resultado
+                    document.getElementById('resultado').innerText = resultado;
                 })
                 .catch(error => {
                     console.error('Erro:', error);
