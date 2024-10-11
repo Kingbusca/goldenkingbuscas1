@@ -48,7 +48,7 @@
     <input type="text" id="cnpj" placeholder="Digite o CNPJ">
     <button id="consultar">Consultar</button>
     
-    <pre id="resultado"></pre>
+    <div id="resultado"></div>
     
     <script>
         document.getElementById('consultar').addEventListener('click', function() {
@@ -69,8 +69,18 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Exibe o resultado formatado
-                    document.getElementById('resultado').innerText = JSON.stringify(data, null, 2);
+                    // Exibe o resultado formatado com emojis
+                    let resultadoHTML = `
+                        📜 Razão Social: ${data.nome || 'N/A'}
+                        🏢 Nome Fantasia: ${data.fantasia || 'N/A'}
+                        📍 Endereço: ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
+                        ☎️ Telefone: ${data.telefone || 'N/A'}
+                        📧 Email: ${data.email || 'N/A'}
+                        📅 Data de Abertura: ${data.abertura || 'N/A'}
+                        🔍 Situação: ${data.situacao || 'N/A'}
+                        🔒 Capital Social: R$ ${data.capital_social || 'N/A'}
+                    `;
+                    document.getElementById('resultado').innerHTML = resultadoHTML;
                 })
                 .catch(error => {
                     console.error('Erro:', error);
