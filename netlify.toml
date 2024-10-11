@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "/consulta"
-  to = "https://api.receitaws.com.br/v1/cnpj"
+  from = "/consulta/*"
+  to = "https://www.receitaws.com.br/v1/cnpj/:splat"
   status = 200
   force = true
