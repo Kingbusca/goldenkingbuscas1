@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "/consulta"
-  to = "/.netlify/functions/consultaCNPJ"
+  from = "/consulta/*"
+  to = "https://www.receitaws.com.br/v1/cnpj/:splat"
   status = 200
   force = true

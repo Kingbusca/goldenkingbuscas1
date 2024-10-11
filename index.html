@@ -1,43 +1,56 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consulta CNPJ</title>
-  <link rel="stylesheet" href="styles.css"> <!-- Link do arquivo CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CNPJ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #resultado {
+            white-space: pre-wrap;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Consulta de CNPJ</h1>
-  <form id="consulta-form">
-    <label for="cnpj">Digite o CNPJ:</label>
-    <input type="text" id="cnpj" name="cnpj" required>
-    <button type="submit">Consultar</button>
-  </form>
+    <h1>Consultar CNPJ</h1>
+    <input type="text" id="cnpj" placeholder="Digite o CNPJ">
+    <button id="consultar">Consultar</button>
+    
+    <pre id="resultado"></pre>
+    
+    <script>
+        document.getElementById('consultar').addEventListener('click', function() {
+            let cnpj = document.getElementById('cnpj').value.trim();
+            
+            // Verifica se o CNPJ está vazio
+            if (cnpj === "") {
+                document.getElementById('resultado').innerText = "Por favor, insira um CNPJ.";
+                return;
+            }
 
-  <div id="resultado"></div>
-
-  <script>
-    const form = document.getElementById('consulta-form');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const cnpj = document.getElementById('cnpj').value;
-      fetch(`/consulta?cnpj=${cnpj}`)
-        .then(response => response.json())
-        .then(data => {
-          const resultadoDiv = document.getElementById('resultado');
-          resultadoDiv.innerHTML = `
-            <h2>Resultado da Consulta:</h2>
-            <table>
-              <tr><td><strong>CNPJ:</strong></td><td>${data.cnpj}</td></tr>
-              <tr><td><strong>Razão Social:</strong></td><td>${data.nome}</td></tr>
-              <tr><td><strong>Telefone:</strong></td><td>${data.telefone}</td></tr>
-              <tr><td><strong>Email:</strong></td><td>${data.email}</td></tr>
-              <tr><td><strong>Situação:</strong></td><td>${data.situacao}</td></tr>
-            </table>
-          `;
-        })
-        .catch(error => console.error('Erro na consulta:', error));
-    });
-  </script>
+            // Faz a requisição para o proxy configurado no Netlify
+            fetch(`/consulta/${cnpj}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar o CNPJ. Verifique o número e tente novamente.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Exibe o resultado formatado
+                    document.getElementById('resultado').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    document.getElementById('resultado').innerText = error.message;
+                });
+        });
+    </script>
 </body>
 </html>
