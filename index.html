@@ -10,15 +10,19 @@
             margin: 0;
             padding: 20px;
             background-color: #f4f4f4;
-            text-align: center;
         }
         h1 {
-            color: #333;
+            color: gold;
+            text-align: center;
+        }
+        h2 {
+            color: blue; /* Título "Consulta CNPJ" em azul */
+            text-align: center;
+            margin-top: 20px; /* Espaço acima do título */
         }
         input[type="text"] {
             padding: 10px;
-            width: 80%; /* Ajuste a largura para dispositivos móveis */
-            max-width: 300px; /* Largura máxima para telas maiores */
+            width: 200px;
             border: 1px solid #ccc;
             border-radius: 4px;
             margin-right: 10px;
@@ -30,14 +34,9 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px;
         }
         button:hover {
             background-color: #218838;
-        }
-        .btn-facebook {
-            background-color: #3b5998; /* Azul do Facebook */
-            margin-left: 10px; /* Espaçamento entre o nome do sócio e o botão */
         }
         #resultado {
             white-space: pre-wrap;
@@ -47,36 +46,30 @@
             border-radius: 4px;
             margin-top: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: left;
-            display: inline-block;
-            font-size: 0.9em; /* Diminui o tamanho da fonte dos resultados */
-            width: 100%; /* Adicionei largura total para responsividade */
-            max-width: 600px; /* Largura máxima para telas grandes */
         }
-        .campo {
-            font-weight: bold; /* Negrito para os títulos dos campos */
+        .socios {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
-        .socio {
-            display: flex; /* Flexbox para alinhar o botão com o nome do sócio */
-            justify-content: space-between;
-            align-items: center;
-            margin: 3px 0; /* Reduzir o espaçamento entre os sócios */
+        .socio-button {
+            background-color: #007bff; /* Azul */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
         }
-
-        /* Media Query para telas menores */
-        @media (max-width: 600px) {
-            input[type="text"], button {
-                width: 90%; /* Aumenta a largura dos botões e campos de texto em telas menores */
-                margin: 10px 0; /* Espaçamento em dispositivos móveis */
-            }
-            #resultado {
-                font-size: 0.8em; /* Diminui ainda mais o tamanho da fonte em dispositivos móveis */
-            }
+        .socio-button:hover {
+            background-color: #0056b3; /* Azul mais escuro */
         }
     </style>
 </head>
 <body>
-    <h1>Consultar CNPJ</h1>
+    <h1>🔍 GOLDEN KING BUSCAS </h1>
+    <h2>Consulta CNPJ</h2> <!-- Título em azul acima da caixa de pesquisa -->
     <input type="text" id="cnpj" placeholder="Digite o CNPJ">
     <button id="consultar">Consultar</button>
     
@@ -102,33 +95,31 @@
                 })
                 .then(data => {
                     // Exibe o resultado formatado com emojis
-                    let sociosHTML = data.qsa.map(socio => `
-                        <div class="socio">
-                            ${socio.nome}
-                            <button class="btn-facebook" onclick="pesquisarFacebook('${socio.nome}')">Facebook</button>
-                        </div>
-                    `).join('');
-
                     let resultadoHTML = `
-📜 <span class="campo">Razão Social:</span> ${data.nome || 'N/A'}
-🏢 <span class="campo">Nome Fantasia:</span> ${data.fantasia || 'N/A'}
-📍 <span class="campo">Endereço:</span> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
-☎️ <span class="campo">Telefone:</span> ${data.telefone || 'N/A'} <button onclick="copiarTelefone('${data.telefone}')">Copiar</button>
-📧 <span class="campo">Email:</span> ${data.email || 'N/A'}
-📅 <span class="campo">Data de Abertura:</span> ${data.abertura || 'N/A'}
-🔍 <span class="campo">Situação:</span> ${data.situacao || 'N/A'}
-🔒 <span class="campo">Capital Social:</span> R$ ${data.capital_social || 'N/A'}
-🏛️ <span class="campo">Tipo:</span> ${data.tipo || 'N/A'}
-📆 <span class="campo">Data da Situação:</span> ${data.data_situacao || 'N/A'}
-🔄 <span class="campo">Última Atualização:</span> ${data.ultima_atualizacao || 'N/A'}
-👥 <span class="campo">Sócios:</span>
-<div>${sociosHTML || 'N/A'}</div>
-📝 <span class="campo">Natureza Jurídica:</span> ${data.natureza_juridica || 'N/A'}
-💼 <span class="campo">Atividade Principal:</span> ${data.atividade_principal[0]?.text || 'N/A'}
-📋 <span class="campo">Atividades Secundárias:</span> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}
-🗓️ <span class="campo">Data de Situação Especial:</span> ${data.data_situacao_especial || 'N/A'}
-🔒 <span class="campo">Motivo da Situação:</span> ${data.motivo_situacao || 'N/A'}
-`;
+                        📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}
+                        🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}
+                        📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
+                        ☎️ <strong>Telefone:</strong> ${data.telefone || 'N/A'} <button onclick="copyToClipboard('${data.telefone || ''}')">Copiar</button>
+                        📧 <strong>Email:</strong> ${data.email || 'N/A'}
+                        📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}
+                        🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}
+                        🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}
+                        🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}
+                        📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}
+                        🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}
+                        <div class="socios">
+                            <strong>👥 Sócios:</strong><br>
+                            ${data.qsa.map(socio => `
+                                ${socio.nome} - ${socio.qual} 
+                                <button class="socio-button" onclick="searchFacebook('${socio.nome}')">Facebook</button>
+                            `).join('<br>') || 'N/A'}
+                        </div>
+                        📝 <strong>Natureza Jurídica:</strong> ${data.natureza_juridica || 'N/A'}
+                        💼 <strong>Atividade Principal:</strong> ${data.atividade_principal[0]?.text || 'N/A'}
+                        📋 <strong>Atividades Secundárias:</strong> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}
+                        🗓️ <strong>Data de Situação Especial:</strong> ${data.data_situacao_especial || 'N/A'}
+                        🔒 <strong>Motivo da Situação:</strong> ${data.motivo_situacao || 'N/A'}
+                    `;
                     document.getElementById('resultado').innerHTML = resultadoHTML;
                 })
                 .catch(error => {
@@ -137,19 +128,17 @@
                 });
         });
 
-        // Função para copiar o número de telefone
-        function copiarTelefone(telefone) {
-            navigator.clipboard.writeText(telefone).then(() => {
-                alert('Número de telefone copiado: ' + telefone);
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Números de telefone copiados para a área de transferência!');
             }, (err) => {
                 console.error('Erro ao copiar: ', err);
             });
         }
 
-        // Função para pesquisar sócio no Facebook
-        function pesquisarFacebook(nome) {
-            const url = `https://www.facebook.com/search/top?q=${encodeURIComponent(nome)}`;
-            window.open(url, '_blank');
+        function searchFacebook(name) {
+            const searchUrl = `https://www.facebook.com/search/top/?q=${encodeURIComponent(name)}`;
+            window.open(searchUrl, '_blank');
         }
     </script>
 </body>
