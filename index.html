@@ -44,6 +44,16 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: left;
             display: inline-block;
+            font-size: 0.9em; /* Diminui o tamanho da fonte dos resultados */
+        }
+        .campo {
+            font-weight: bold; /* Negrito para os títulos dos campos */
+        }
+        .socio {
+            display: flex; /* Flexbox para alinhar o botão com o nome do sócio */
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0; /* Espaçamento entre os sócios */
         }
     </style>
 </head>
@@ -74,24 +84,32 @@
                 })
                 .then(data => {
                     // Exibe o resultado formatado com emojis
+                    let sociosHTML = data.qsa.map(socio => `
+                        <div class="socio">
+                            ${socio.nome}
+                            <button onclick="pesquisarFacebook('${socio.nome}')">Facebook</button>
+                        </div>
+                    `).join('');
+
                     let resultadoHTML = `
-📜 Razão Social: ${data.nome || 'N/A'}
-🏢 Nome Fantasia: ${data.fantasia || 'N/A'}
-📍 Endereço: ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
-☎️ Telefone: ${data.telefone || 'N/A'}
-📧 Email: ${data.email || 'N/A'}
-📅 Data de Abertura: ${data.abertura || 'N/A'}
-🔍 Situação: ${data.situacao || 'N/A'}
-🔒 Capital Social: R$ ${data.capital_social || 'N/A'}
-🏛️ Tipo: ${data.tipo || 'N/A'}
-📆 Data da Situação: ${data.data_situacao || 'N/A'}
-🔄 Última Atualização: ${data.ultima_atualizacao || 'N/A'}
-👥 Sócios: ${data.qsa.map(socio => `${socio.nome} - ${socio.qual}`).join(', ') || 'N/A'}
-📝 Natureza Jurídica: ${data.natureza_juridica || 'N/A'}
-💼 Atividade Principal: ${data.atividade_principal[0]?.text || 'N/A'}
-📋 Atividades Secundárias: ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}
-🗓️ Data de Situação Especial: ${data.data_situacao_especial || 'N/A'}
-🔒 Motivo da Situação: ${data.motivo_situacao || 'N/A'}
+📜 <span class="campo">Razão Social:</span> ${data.nome || 'N/A'}
+🏢 <span class="campo">Nome Fantasia:</span> ${data.fantasia || 'N/A'}
+📍 <span class="campo">Endereço:</span> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
+☎️ <span class="campo">Telefone:</span> ${data.telefone || 'N/A'} <button onclick="copiarTelefone('${data.telefone}')">Copiar</button>
+📧 <span class="campo">Email:</span> ${data.email || 'N/A'}
+📅 <span class="campo">Data de Abertura:</span> ${data.abertura || 'N/A'}
+🔍 <span class="campo">Situação:</span> ${data.situacao || 'N/A'}
+🔒 <span class="campo">Capital Social:</span> R$ ${data.capital_social || 'N/A'}
+🏛️ <span class="campo">Tipo:</span> ${data.tipo || 'N/A'}
+📆 <span class="campo">Data da Situação:</span> ${data.data_situacao || 'N/A'}
+🔄 <span class="campo">Última Atualização:</span> ${data.ultima_atualizacao || 'N/A'}
+👥 <span class="campo">Sócios:</span>
+<div>${sociosHTML || 'N/A'}</div>
+📝 <span class="campo">Natureza Jurídica:</span> ${data.natureza_juridica || 'N/A'}
+💼 <span class="campo">Atividade Principal:</span> ${data.atividade_principal[0]?.text || 'N/A'}
+📋 <span class="campo">Atividades Secundárias:</span> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}
+🗓️ <span class="campo">Data de Situação Especial:</span> ${data.data_situacao_especial || 'N/A'}
+🔒 <span class="campo">Motivo da Situação:</span> ${data.motivo_situacao || 'N/A'}
 `;
                     document.getElementById('resultado').innerHTML = resultadoHTML;
                 })
@@ -100,6 +118,21 @@
                     document.getElementById('resultado').innerText = error.message;
                 });
         });
+
+        // Função para copiar o número de telefone
+        function copiarTelefone(telefone) {
+            navigator.clipboard.writeText(telefone).then(() => {
+                alert('Número de telefone copiado: ' + telefone);
+            }, (err) => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
+
+        // Função para pesquisar sócio no Facebook
+        function pesquisarFacebook(nome) {
+            const url = `https://www.facebook.com/search/top?q=${encodeURIComponent(nome)}`;
+            window.open(url, '_blank');
+        }
     </script>
 </body>
 </html>
