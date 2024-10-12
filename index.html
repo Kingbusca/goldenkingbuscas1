@@ -233,85 +233,46 @@
     
     <script>
         document.getElementById('consultarCPF').addEventListener('click', function() {
-            let cpf = document.getElementById('cpf').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
-            
-            // Verifica se o CPF está vazio ou tem tamanho incorreto
-            if (cpf === "" || cpf.length !== 11) {
-                document.getElementById('resultadoCPF').innerText = "Por favor, insira um CPF válido com 11 dígitos.";
-                return;
-            }
+    let cpf = document.getElementById('cpf').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
+    
+    // Verifica se o CPF está vazio ou tem tamanho incorreto
+    if (cpf === "" || cpf.length !== 11) {
+        document.getElementById('resultadoCPF').innerText = "Por favor, insira um CPF válido com 11 dígitos.";
+        return;
+    }
 
-            // Faz a requisição para a API de CPF usando o redirecionamento do Netlify
-            fetch(`/consulta-cpf/${cpf}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar o CPF. Verifique o número e tente novamente.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Resposta da API:', data); // Adiciona a resposta da API ao console
+    fetch(`/consulta-cpf/${cpf}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao buscar o CPF. Verifique o número e tente novamente.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data); // Verifique a estrutura do objeto data
 
-                // Exibir os resultados no HTML com a nova estrutura
-                let resultadoHTML = `
-<h3>Informações Pessoais</h3>
-<table>
-    <tr>
-        <td>📜 <strong>CPF:</strong></td>
-        <td>${data.cpf || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>👤 <strong>Nome:</strong></td>
-        <td>${data.nome || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>👩‍👦 <strong>Nome da Mãe:</strong></td>
-        <td>${data.nome_mae || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>🎂 <strong>Data de Nascimento:</strong></td>
-        <td>${data.data_nascimento || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>🏠 <strong>Endereço:</strong></td>
-        <td>${data.endereco || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>📞 <strong>Telefone:</strong></td>
-        <td>${data.telefone || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>📧 <strong>Email:</strong></td>
-        <td>${data.email || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>🔍 <strong>Situação:</strong></td>
-        <td>${data.situacao || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>📅 <strong>Data de Situação:</strong></td>
-        <td>${data.data_situacao || 'N/A'}</td>
-    </tr>
-    <tr>
-        <td>🔄 <strong>Última Atualização:</strong></td>
-        <td>${data.ultima_atualizacao || 'N/A'}</td>
-    </tr>
-</table>
-`;
+        let resultadoHTML = `
+        <h3>Informações Pessoais</h3>
+        <div class="campo">📜 <strong>CPF:</strong> ${data.cpf ? data.cpf : 'N/A'}</div>
+        <div class="campo">👤 <strong>Nome:</strong> ${data.nome ? data.nome : 'N/A'}</div>
+        <div class="campo">👩‍👦 <strong>Nome da Mãe:</strong> ${data.nome_mae ? data.nome_mae : 'N/A'}</div>
+        <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${data.data_nascimento ? data.data_nascimento : 'N/A'}</div>
+        <div class="campo">🏠 <strong>Endereço:</strong> ${data.endereco ? data.endereco : 'N/A'}</div>
+        <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone ? data.telefone : 'N/A'}</div>
+        <div class="campo">📧 <strong>Email:</strong> ${data.email ? data.email : 'N/A'}</div>
+        <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao ? data.situacao : 'N/A'}</div>
+        <div class="campo">📅 <strong>Data de Situação:</strong> ${data.data_situacao ? data.data_situacao : 'N/A'}</div>
+        <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao ? data.ultima_atualizacao : 'N/A'}</div>
+        `;
 
- 
-                // Verifica se o objeto data contém dados antes de exibir
-                if (data) {
-                    document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
-                } else {
-                    document.getElementById('resultadoCPF').innerText = "Nenhum dado encontrado para o CPF informado.";
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                document.getElementById('resultadoCPF').innerText = error.message;
-            });
-        });
+        document.getElementById('resultadoCPF').innerHTML = resultadoHTML; // Atualiza com os novos dados
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        document.getElementById('resultadoCPF').innerText = error.message;
+    });
+});
+
     </script>
 </body>
 </html>
