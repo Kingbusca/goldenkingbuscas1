@@ -72,14 +72,23 @@
                     // Exibe o resultado formatado com emojis
                     let resultadoHTML = `
                         📜 Razão Social: ${data.nome || 'N/A'}
-                        🏢 Nome Fantasia: ${data.fantasia || 'N/A'}
-                        📍 Endereço: ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
-                        ☎️ Telefone: ${data.telefone || 'N/A'}
-                        📧 Email: ${data.email || 'N/A'}
-                        📅 Data de Abertura: ${data.abertura || 'N/A'}
-                        🔍 Situação: ${data.situacao || 'N/A'}
-                        🔒 Capital Social: R$ ${data.capital_social || 'N/A'}
-                    `;
+🏢 Nome Fantasia: ${data.fantasia || 'N/A'}
+📍 Endereço: ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
+☎️ Telefone: ${data.telefone || 'N/A'}
+📧 Email: ${data.email || 'N/A'}
+📅 Data de Abertura: ${data.abertura || 'N/A'}
+🔍 Situação: ${data.situacao || 'N/A'}
+🔒 Capital Social: R$ ${data.capital_social || 'N/A'}
+🏛️ Tipo: ${data.tipo || 'N/A'}
+📆 Data da Situação: ${data.data_situacao || 'N/A'}
+🔄 Última Atualização: ${data.ultima_atualizacao || 'N/A'}
+👥 Sócios: ${data.qsa.map(socio => `${socio.nome} - ${socio.qual}`).join(', ') || 'N/A'}
+📝 Natureza Jurídica: ${data.natureza_juridica || 'N/A'}
+💼 Atividade Principal: ${data.atividade_principal[0]?.text || 'N/A'}
+📋 Atividades Secundárias: ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}
+🗓️ Data de Situação Especial: ${data.data_situacao_especial || 'N/A'}
+🔒 Motivo da Situação: ${data.motivo_situacao || 'N/A'}
+`;
                     document.getElementById('resultado').innerHTML = resultadoHTML;
                 })
                 .catch(error => {
