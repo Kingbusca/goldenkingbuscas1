@@ -17,7 +17,8 @@
         }
         input[type="text"] {
             padding: 10px;
-            width: 200px;
+            width: 80%; /* Ajuste a largura para dispositivos móveis */
+            max-width: 300px; /* Largura máxima para telas maiores */
             border: 1px solid #ccc;
             border-radius: 4px;
             margin-right: 10px;
@@ -45,6 +46,8 @@
             text-align: left;
             display: inline-block;
             font-size: 0.9em; /* Diminui o tamanho da fonte dos resultados */
+            width: 100%; /* Adicionei largura total para responsividade */
+            max-width: 600px; /* Largura máxima para telas grandes */
         }
         .campo {
             font-weight: bold; /* Negrito para os títulos dos campos */
@@ -54,6 +57,17 @@
             justify-content: space-between;
             align-items: center;
             margin: 5px 0; /* Espaçamento entre os sócios */
+        }
+
+        /* Media Query para telas menores */
+        @media (max-width: 600px) {
+            input[type="text"], button {
+                width: 90%; /* Aumenta a largura dos botões e campos de texto em telas menores */
+                margin: 10px 0; /* Espaçamento em dispositivos móveis */
+            }
+            #resultado {
+                font-size: 0.8em; /* Diminui ainda mais o tamanho da fonte em dispositivos móveis */
+            }
         }
     </style>
 </head>
