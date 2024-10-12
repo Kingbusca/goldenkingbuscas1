@@ -159,6 +159,115 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CPF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: rgb(155, 0, 0);
+            text-align: center;
+        }
+        .consulta-container {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 20px auto; /* Centraliza a caixa */
+            max-width: 300px; /* Define uma largura máxima */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: blue; /* Título "Consulta CPF" em azul */
+            text-align: center;
+            margin-top: 0; /* Remove espaço acima do título */
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 100%; /* Ocupa toda a largura da caixa */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px; /* Espaço abaixo do input */
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%; /* Ocupa toda a largura do botão */
+        }
+        button:hover {
+            background-color: #0029dd;
+        }
+        #resultadoCPF {
+            margin-top: 20px;
+        }
+        .campo {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px; /* Espaço entre campos */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="consulta-container">
+        <h2>Consulta CPF</h2>
+        <input type="text" id="cpf" placeholder="Digite o CPF">
+        <button id="consultarCPF">Consultar</button>
+    </div>
+    
+    <div id="resultadoCPF"></div>
+    
+    <script>
+        document.getElementById('consultarCPF').addEventListener('click', function() {
+            let cpf = document.getElementById('cpf').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
+            
+            // Verifica se o CPF está vazio ou tem tamanho incorreto
+            if (cpf === "" || cpf.length !== 11) {
+                document.getElementById('resultadoCPF').innerText = "Por favor, insira um CPF válido com 11 dígitos.";
+                return;
+            }
+
+            // Faz a requisição para a API de CPF
+            fetch(`/consulta/${cpf}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar o CPF. Verifique o número e tente novamente.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Exibe o resultado formatado
+                    let resultadoHTML = `
+                        <div class="campo">🆔 <strong>Nome:</strong> ${data.nome || 'N/A'}</div>
+                        <div class="campo">📍 <strong>Endereço:</strong> ${data.endereco || 'N/A'}</div>
+                        <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone || 'N/A'}</div>
+                        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
+                        <div class="campo">🔒 <strong>Situacao:</strong> ${data.situacao || 'N/A'}</div>
+                    `;
+                    document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    document.getElementById('resultadoCPF').innerText = error.message;
+                });
+        });
+    </script>
+</body>
+</html>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
