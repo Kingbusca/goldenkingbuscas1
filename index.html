@@ -461,27 +461,23 @@
     <div id="resultado"></div>
 
     <script>
-       document.getElementById('consultarButton').addEventListener('click', async () => {
-    const cpf = document.getElementById('cpfInput').value;
-    const resposta = await fetch(`/consulta-cpf/${cpf}`);
-    const data = await resposta.json();
+        document.getElementById('consultarButton').addEventListener('click', async () => {
+            const cpf = document.getElementById('cpfInput').value;
+            const resposta = await fetch(`/consulta-cpf/${cpf}`);
+            const data = await resposta.json();
 
-    console.log(data); // Para verificar a estrutura dos dados
+            const resultadoDiv = document.getElementById('resultado');
 
-    const resultadoDiv = document.getElementById('resultado');
-    resultadoDiv.innerHTML = ''; // Limpa resultados anteriores
+            // Coloque o código aqui
+            resultadoDiv.innerHTML = ''; // Limpa resultados anteriores
 
-    // Exibindo os principais campos
-    resultadoDiv.innerHTML += `<h3>Informações Pessoais</h3>`;
-    resultadoDiv.innerHTML += `<p><strong>CPF:</strong> ${data.cpf || 'Não disponível'}</p>`;
-    resultadoDiv.innerHTML += `<p><strong>Nome:</strong> ${data.nome || 'Não disponível'}</p>`;
-    resultadoDiv.innerHTML += `<p><strong>Nome da Mãe:</strong> ${data.nome_mae || 'Não disponível'}</p>`;
-    resultadoDiv.innerHTML += `<p><strong>Data de Nascimento:</strong> ${data.nasc || 'Não disponível'}</p>`;
-    resultadoDiv.innerHTML += `<p><strong>Sexo:</strong> ${data.sexo || 'Não disponível'}</p>`;
-
-    // Adicione aqui o tratamento para telefones, endereços e outros campos, caso existam
-});
-
+            // Exibindo os principais campos
+            resultadoDiv.innerHTML += `<h3>Informações Pessoais</h3>`;
+            resultadoDiv.innerHTML += `<p><strong>CPF:</strong> ${data.cpf}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Nome:</strong> ${data.nome}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Nome da Mãe:</strong> ${data.nome_mae}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Data de Nascimento:</strong> ${data.nasc}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Sexo:</strong> ${data.sexo}</p>`;
 
             // Exibindo informações de contato
             if (data.telefones && data.telefones.length > 0) {
