@@ -12,7 +12,7 @@
             background-color: #f4f4f4;
         }
         h1 {
-            color: gold;
+            color: rgb(199, 0, 0);
             text-align: center;
         }
         h2 {
@@ -152,51 +152,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden King Buscas</title>
+    <title>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</title>
     <style>
-        /* Estilo do formulário e elementos */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            font-size: 20px; /* Tamanho do título compatível */
+            margin-bottom: 20px;
+            text-align: center; /* Centraliza o título */
+        }
         #formulario {
             margin-top: 20px;
-            display: block; /* Formulário visível */
+            display: block;
         }
         #cronometro {
-            display: none; /* Inicialmente oculto */
+            display: none;
             font-size: 18px;
             margin-top: 10px;
         }
         #botaoRedirecionar {
-            display: none; /* Inicialmente oculto */
+            display: none; /* Oculta inicialmente */
             margin-top: 10px;
         }
         #token {
-            display: none; /* Inicialmente oculto */
+            display: none;
             font-size: 16px;
             margin-top: 10px;
             color: green;
         }
+        #mensagem {
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+            display: none; /* Oculta inicialmente */
+        }
+        button:disabled {
+            background-color: gray; /* Cor cinza para botão inativo */
+            color: white;
+        }
+        button:enabled {
+            background-color: green; /* Cor verde para botão ativo */
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <h1>Golden King Buscas</h1>
+    <h1>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</h1>
 
     <!-- Formulário -->
     <div id="formulario">
         <input type="text" id="nome" placeholder="Nome" required>
-        <input type="text" id="whatsapp" placeholder="Número de WhatsApp" required pattern="^9\d{8}$" title="O número deve começar com 9.">
+        <input type="text" id="whatsapp" placeholder="Número de WhatsApp" required pattern="^9\d{8}$" title="O número deve começar com 9 e ter exatamente 11 dígitos.">
         <button id="gerarToken" onclick="gerarToken()">Gerar Token</button>
     </div>
 
     <div id="cronometro"></div>
     <div id="token"></div>
-    <button id="botaoRedirecionar" onclick="window.location.href='https://feiraobr6.hotmart.host/pagina-de-vendas-d480faf7-f9a6-404f-95fd-843ab99ea323'">Ir para página</button>
+    <div id="mensagem">FAÇA SUA CONSULTA GRÁTIS ANTES QUE O TOKEN EXPIRE</div>
+    <button id="botaoRedirecionar" onclick="window.location.href='https://feiraobr6.hotmart.host/pagina-de-vendas-d480faf7-f9a6-404f-95fd-843ab99ea323'">VER PLANOS KING GOLDEN</button>
 
     <script>
         const tempoLimite = 60 * 1000; // 1 minuto em milissegundos
         let tokenGerado = false;
-        const numerosGerados = new Set(); // Para armazenar números que já geraram token
+        const numerosGerados = JSON.parse(localStorage.getItem('numerosGerados')) || {};
 
         // Desabilitar o botão de consulta CNPJ inicialmente
-        document.getElementById('consultar').disabled = true; // Ajustar o ID do botão da consulta
+        document.getElementById('consultar').disabled = true;
 
         function gerarToken() {
             const whatsapp = document.getElementById('whatsapp').value;
@@ -209,25 +234,35 @@
             }
 
             // Verificar se o número já gerou um token nas últimas 48 horas
-            if (numerosGerados.has(whatsapp)) {
+            const agora = new Date().getTime();
+            if (numerosGerados[whatsapp] && (agora - numerosGerados[whatsapp].timestamp < 48 * 60 * 60 * 1000)) {
                 alert("Este número já gerou um token nas últimas 48 horas.");
                 return;
             }
 
-            // Adicionar o número ao conjunto
-            numerosGerados.add(whatsapp);
-            tokenGerado = true;
+            // Verificar se o número começa com 3, se o terceiro dígito é 9 e se possui exatamente 11 dígitos
+            if (whatsapp.startsWith('3') || whatsapp[2] !== '9' || whatsapp.length !== 11) {
+                alert("Número inválido. O número não pode começar com 3, o terceiro dígito deve ser 9 e deve conter exatamente 11 dígitos.");
+                return;
+            }
 
             // Gerar token aleatório
             const token = `id-${Math.floor(Math.random() * 1000)}`;
             document.getElementById('token').innerText = `Seu token: ${token}`;
             document.getElementById('token').style.display = 'block'; // Mostrar token
 
+            // Mostrar mensagem após o token ser gerado
+            document.getElementById('mensagem').style.display = 'block';
+
             // Iniciar o cronômetro
             startCronometro();
 
             // Habilitar o botão da consulta CNPJ imediatamente
-            document.getElementById('consultar').disabled = false; // Ajustar o ID do botão da consulta
+            document.getElementById('consultar').disabled = false;
+
+            // Salvar o número e o timestamp no localStorage
+            numerosGerados[whatsapp] = { timestamp: agora };
+            localStorage.setItem('numerosGerados', JSON.stringify(numerosGerados));
         }
 
         function startCronometro() {
@@ -254,7 +289,7 @@
         document.querySelectorAll('#nome, #whatsapp').forEach(input => {
             input.addEventListener('input', () => {
                 const nomePreenchido = document.getElementById('nome').value.trim() !== '';
-                const whatsappPreenchido = document.getElementById('whatsapp').value.trim() !== '';
+                const whatsappPreenchido = document.getElementById('whatsapp').value.trim() !== '' && document.getElementById('whatsapp').value.length === 11;
                 document.getElementById('gerarToken').disabled = !(nomePreenchido && whatsappPreenchido);
             });
         });
