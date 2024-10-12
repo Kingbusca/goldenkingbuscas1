@@ -252,35 +252,12 @@
                 .then(data => {
                     // Exibe o resultado formatado
                     let resultadoHTML = `
-                        <h3>Resultado da Consulta CPF</h3>
-          <p><strong>Nome:</strong> ${data.nome}</p>
-          <p><strong>CPF:</strong> ${data.cpf}</p>
-          <p><strong>Sexo:</strong> ${data.sexo}</p>
-          <p><strong>Data de Nascimento:</strong> ${data.nasc}</p>
-          <p><strong>Nome da Mãe:</strong> ${data.nome_mae}</p>
-          <p><strong>Nome do Pai:</strong> ${data.nome_pai}</p>
-          <h4>Endereço</h4>
-          <p><strong>Logradouro:</strong> ${data.enderecos[0]?.logradouro}</p>
-          <p><strong>Número:</strong> ${data.enderecos[0]?.numero}</p>
-          <p><strong>Bairro:</strong> ${data.enderecos[0]?.bairro}</p>
-          <p><strong>Cidade:</strong> ${data.enderecos[0]?.cidade}</p>
-          <p><strong>UF:</strong> ${data.enderecos[0]?.uf}</p>
-          <p><strong>CEP:</strong> ${data.enderecos[0]?.cep}</p>
-          <h4>Emails</h4>
-          <p><strong>Email:</strong> ${data.emails[0]?.email}</p>
-          <h4>Telefones</h4>
-          ${data.telefones.map(tel => `<p><strong>Telefone:</strong> ${tel.telefone}</p>`).join('')}
-          <h4>Empregos</h4>
-          ${data.empregos.map(emp => `
-            <p><strong>Empresa:</strong> ${emp.nome}</p>
-            <p><strong>Admissão:</strong> ${emp.admissao}</p>
-            <p><strong>Salário:</strong> ${emp.salario_mensal}</p>
-          `).join('')}
-          <h4>Interesses</h4>
-          <p><strong>Classe Média:</strong> ${data.interesses.classe_media}</p>
-          <p><strong>Crédito Pessoal Pré-Aprovado:</strong> ${data.interesses.credito_pessoal_preaprovado}</p>
-          <p><strong>Possui Casa Própria:</strong> ${data.interesses.possui_casa_propria}</p>
-        `;
+                        <div class="campo">🆔 <strong>Nome:</strong> ${data.nome || 'N/A'}</div>
+                        <div class="campo">📍 <strong>Endereço:</strong> ${data.endereco || 'N/A'}</div>
+                        <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone || 'N/A'}</div>
+                        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
+                        <div class="campo">🔒 <strong>Situacao:</strong> ${data.situacao || 'N/A'}</div>
+                    `;
                     document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
                 })
                 .catch(error => {
