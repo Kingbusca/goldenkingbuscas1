@@ -463,7 +463,7 @@
     <script>
         document.getElementById('consultarButton').addEventListener('click', async () => {
             const cpf = document.getElementById('cpfInput').value;
-            const resposta = await fetch(`consulta-cpf/${cpf}`);
+            const resposta = await fetch(`/consulta-cpf/${cpf}`);
             const data = await resposta.json();
 
             const resultadoDiv = document.getElementById('resultado');
