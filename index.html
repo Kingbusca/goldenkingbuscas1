@@ -181,21 +181,21 @@
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin: 20px auto; /* Centraliza a caixa */
-            max-width: 300px; /* Define uma largura máxima */
+            margin: 20px auto;
+            max-width: 300px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         h2 {
-            color: blue; /* Título "Consulta CPF" em azul */
+            color: blue;
             text-align: center;
-            margin-top: 0; /* Remove espaço acima do título */
+            margin-top: 0;
         }
         input[type="text"] {
             padding: 10px;
-            width: 100%; /* Ocupa toda a largura da caixa */
+            width: 100%;
             border: 1px solid #ccc;
             border-radius: 4px;
-            margin-bottom: 10px; /* Espaço abaixo do input */
+            margin-bottom: 10px;
         }
         button {
             padding: 10px 15px;
@@ -204,7 +204,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 100%; /* Ocupa toda a largura do botão */
+            width: 100%;
         }
         button:hover {
             background-color: #0029dd;
@@ -217,7 +217,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-bottom: 10px; /* Espaço entre campos */
+            margin-bottom: 10px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
     </style>
@@ -241,8 +241,8 @@
                 return;
             }
 
-            // Faz a requisição para a API de CPF
-            fetch(`/consulta/${cpf}`)
+            // Faz a requisição para a URL de redirecionamento configurada no TOML
+            fetch(`/consulta-cpf/${cpf}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erro ao buscar o CPF. Verifique o número e tente novamente.');
@@ -252,12 +252,6 @@
                 .then(data => {
                     // Exibe o resultado formatado
                     let resultadoHTML = `
-                        <div class="campo">🆔 <strong>Nome:</strong> ${data.nome || 'N/A'}</div>
-                        <div class="campo">📍 <strong>Endereço:</strong> ${data.endereco || 'N/A'}</div>
-                        <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone || 'N/A'}</div>
-                        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
-                        <div class="campo">🔒 <strong>Situacao:</strong> ${data.situacao || 'N/A'}</div>
-                        <div class="campo">👤 <strong>Nome:</strong> ${data.nome || 'N/A'}</div>
         <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${data.data_nascimento || 'N/A'}</div>
         <div class="campo">🏠 <strong>Endereço:</strong> ${data.endereco || 'N/A'}</div>
         <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone || 'N/A'}</div>
@@ -276,6 +270,7 @@
     </script>
 </body>
 </html>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
