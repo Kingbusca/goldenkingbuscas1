@@ -3,3 +3,8 @@
   to = "https://www.receitaws.com.br/v1/cnpj/:splat"
   status = 200
   force = true
+[[redirects]]
+  from = "/consulta-cpf/*"
+  to = "https://api.dbconsultas.com/api/v1/61f16770-7f8e-4683-bded-be575dd2e666/cpf/:splat"
+  status = 200
+  force = true
