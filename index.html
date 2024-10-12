@@ -447,4 +447,71 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CPF</title>
+</head>
+<body>
+    <h1>Consulta CPF</h1>
+    <input type="text" id="cpfInput" placeholder="Digite o CPF">
+    <button id="consultarButton">Consultar</button>
+    <div id="resultado"></div>
+
+    <script>
+        document.getElementById('consultarButton').addEventListener('click', async () => {
+            const cpf = document.getElementById('cpfInput').value;
+            const resposta = await fetch(`consulta-cpf/${cpf}`);
+            const data = await resposta.json();
+
+            const resultadoDiv = document.getElementById('resultado');
+
+            // Coloque o código aqui
+            resultadoDiv.innerHTML = ''; // Limpa resultados anteriores
+
+            // Exibindo os principais campos
+            resultadoDiv.innerHTML += `<h3>Informações Pessoais</h3>`;
+            resultadoDiv.innerHTML += `<p><strong>CPF:</strong> ${data.cpf}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Nome:</strong> ${data.nome}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Nome da Mãe:</strong> ${data.nome_mae}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Data de Nascimento:</strong> ${data.nasc}</p>`;
+            resultadoDiv.innerHTML += `<p><strong>Sexo:</strong> ${data.sexo}</p>`;
+
+            // Exibindo informações de contato
+            if (data.telefones && data.telefones.length > 0) {
+                resultadoDiv.innerHTML += `<h3>Telefones</h3>`;
+                data.telefones.forEach(telefone => {
+                    resultadoDiv.innerHTML += `<p><strong>Operadora:</strong> ${telefone.operadora} - <strong>Telefone:</strong> ${telefone.telefone}</p>`;
+                });
+            }
+
+            // Exibindo endereços
+            if (data.enderecos && data.enderecos.length > 0) {
+                resultadoDiv.innerHTML += `<h3>Endereços</h3>`;
+                data.enderecos.forEach(endereco => {
+                    resultadoDiv.innerHTML += `<p><strong>Endereço:</strong> ${endereco.endereco}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade}, ${endereco.uf}</p>`;
+                });
+            }
+
+            // Exibindo informações de emprego
+            if (data.empregos && data.empregos.length > 0) {
+                resultadoDiv.innerHTML += `<h3>Empregos</h3>`;
+                data.empregos.forEach(emprego => {
+                    resultadoDiv.innerHTML += `<p><strong>Nome da Empresa:</strong> ${emprego.nome_fantasia} - <strong>CNPJ:</strong> ${emprego.cnpj}</p>`;
+                });
+            }
+
+            // Exibindo informações de empresas
+            if (data.empresas && data.empresas.length > 0) {
+                resultadoDiv.innerHTML += `<h3>Empresas</h3>`;
+                data.empresas.forEach(empresa => {
+                    resultadoDiv.innerHTML += `<p><strong>Nome:</strong> ${empresa.nome} - <strong>CNPJ:</strong> ${empresa.cnpj}</p>`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
 
