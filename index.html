@@ -10,6 +10,7 @@
             margin: 0;
             padding: 20px;
             background-color: #f4f4f4;
+            text-align: center;
         }
         h1 {
             color: #333;
@@ -28,6 +29,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #218838;
@@ -40,6 +42,8 @@
             border-radius: 4px;
             margin-top: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            display: inline-block;
         }
     </style>
 </head>
@@ -71,7 +75,7 @@
                 .then(data => {
                     // Exibe o resultado formatado com emojis
                     let resultadoHTML = `
-                        📜 Razão Social: ${data.nome || 'N/A'}
+📜 Razão Social: ${data.nome || 'N/A'}
 🏢 Nome Fantasia: ${data.fantasia || 'N/A'}
 📍 Endereço: ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
 ☎️ Telefone: ${data.telefone || 'N/A'}
