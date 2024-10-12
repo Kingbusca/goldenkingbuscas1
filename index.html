@@ -12,7 +12,7 @@
             background-color: #f4f4f4;
         }
         h1 {
-            color: rgb(155, 0, 0);
+            color: rgba(190, 172, 1, 0.87);
             text-align: center;
         }
         h2 {
@@ -160,29 +160,26 @@
             padding: 10px;
             background-color: #f4f4f4;
         }
-        /* Estilo fixo para o rodapé */
-        #rodape-fixo {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+        /* Estilo para a caixa do rodapé */
+        #caixa-rodape {
+            margin-top: 50px;
             background-color: #bdbdbdc7;
-            padding: 3px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             text-align: center;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        #rodape-fixo div {
+        #caixa-rodape div {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
-        #rodape-fixo input, #rodape-fixo button {
+        #caixa-rodape input, #caixa-rodape button {
             margin: 5px;
-        }
-        #formulario {
-            margin-top: 20px;
-            display: block;
         }
         #cronometro {
             display: none;
@@ -217,8 +214,8 @@
 </head>
 <body>
 
-    <!-- Conteúdo fixo no rodapé -->
-    <div id="rodape-fixo">
+    <!-- Conteúdo na caixa do rodapé -->
+    <div id="caixa-rodape">
         <h1>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</h1>
         <div>
             <input type="text" id="nome" placeholder="Nome" required>
@@ -235,8 +232,6 @@
         const tempoLimite = 60 * 1000;
         let tokenGerado = false;
         const numerosGerados = JSON.parse(localStorage.getItem('numerosGerados')) || {};
-
-        document.getElementById('consultar').disabled = true;
 
         function gerarToken() {
             const whatsapp = document.getElementById('whatsapp').value;
@@ -266,8 +261,6 @@
 
             startCronometro();
 
-            document.getElementById('consultar').disabled = false;
-
             numerosGerados[whatsapp] = { timestamp: agora };
             localStorage.setItem('numerosGerados', JSON.stringify(numerosGerados));
         }
@@ -282,7 +275,6 @@
                     clearInterval(intervalo);
                     cronometroElement.innerText = "O tempo para uso do token expirou.";
                     document.getElementById('botaoRedirecionar').style.display = 'block';
-                    document.getElementById('consultar').disabled = true;
                     return;
                 }
 
@@ -291,14 +283,6 @@
                 tempoRestante -= 1000;
             }, 1000);
         }
-
-        document.querySelectorAll('#nome, #whatsapp').forEach(input => {
-            input.addEventListener('input', () => {
-                const nomePreenchido = document.getElementById('nome').value.trim() !== '';
-                const whatsappPreenchido = document.getElementById('whatsapp').value.trim() !== '' && document.getElementById('whatsapp').value.length === 11;
-                document.getElementById('gerarToken').disabled = !(nomePreenchido && whatsappPreenchido);
-            });
-        });
     </script>
 </body>
 </html>
