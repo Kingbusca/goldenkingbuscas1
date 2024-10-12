@@ -255,20 +255,37 @@
                 // Exibir os resultados no HTML com a nova estrutura
                 let resultadoHTML = `
 <h3>Informações Pessoais</h3>
-<ul>
-    <li>📜 <strong>CPF:</strong> ${data.cpf || 'N/A'}</li>
-    <li>👤 <strong>Nome:</strong> ${data.nome || 'N/A'}</li>
-    <li>👩‍👦 <strong>Nome da Mãe:</strong> ${data.nome_mae || 'N/A'}</li>
-    <li>🎂 <strong>Data de Nascimento:</strong> ${data.data_nascimento || 'N/A'}</li>
-    <li>🏠 <strong>Endereço:</strong> ${data.endereco || 'N/A'}</li>
-    <li>📞 <strong>Telefone:</strong> ${data.telefone || 'N/A'}</li>
-    <li>📧 <strong>Email:</strong> ${data.email || 'N/A'}</li>
-    <li>🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</li>
-    <li>📅 <strong>Data de Situação:</strong> ${data.data_situacao || 'N/A'}</li>
-    <li>🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</li>
-</ul>
+<div class="campo">
+    <strong>CPF:</strong> ${data.cpf || 'N/A'} <span>📜</span>
+</div>
+<div class="campo">
+    <strong>Nome:</strong> ${data.nome || 'N/A'} <span>👤</span>
+</div>
+<div class="campo">
+    <strong>Nome da Mãe:</strong> ${data.nome_mae || 'N/A'} <span>👩‍👦</span>
+</div>
+<div class="campo">
+    <strong>Data de Nascimento:</strong> ${data.data_nascimento || 'N/A'} <span>🎂</span>
+</div>
+<div class="campo">
+    <strong>Endereço:</strong> ${data.endereco || 'N/A'} <span>🏠</span>
+</div>
+<div class="campo">
+    <strong>Telefone:</strong> ${data.telefone || 'N/A'} <span>📞</span>
+</div>
+<div class="campo">
+    <strong>Email:</strong> ${data.email || 'N/A'} <span>📧</span>
+</div>
+<div class="campo">
+    <strong>Situação:</strong> ${data.situacao || 'N/A'} <span>🔍</span>
+</div>
+<div class="campo">
+    <strong>Data de Situação:</strong> ${data.data_situacao || 'N/A'} <span>📅</span>
+</div>
+<div class="campo">
+    <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'} <span>🔄</span>
+</div>
 `;
- 
                 // Verifica se o objeto data contém dados antes de exibir
                 if (data) {
                     document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
