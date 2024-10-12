@@ -157,13 +157,28 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             background-color: #f4f4f4;
         }
-        h1 {
-            font-size: 20px; /* Tamanho do título compatível */
-            margin-bottom: 20px;
-            text-align: center; /* Centraliza o título */
+        /* Estilo fixo para o rodapé */
+        #rodape-fixo {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #bdbdbdc7;
+            padding: 3px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        #rodape-fixo div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #rodape-fixo input, #rodape-fixo button {
+            margin: 5px;
         }
         #formulario {
             margin-top: 20px;
@@ -175,7 +190,7 @@
             margin-top: 10px;
         }
         #botaoRedirecionar {
-            display: none; /* Oculta inicialmente */
+            display: none; 
             margin-top: 10px;
         }
         #token {
@@ -188,89 +203,71 @@
             color: red;
             font-size: 16px;
             margin-top: 10px;
-            display: none; /* Oculta inicialmente */
+            display: none;
         }
         button:disabled {
-            background-color: gray; /* Cor cinza para botão inativo */
+            background-color: gray;
             color: white;
         }
         button:enabled {
-            background-color: green; /* Cor verde para botão ativo */
+            background-color: green;
             color: white;
         }
-        #rodape-fixo {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #f8f9fa; /* cor do fundo */
-    padding: 10px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* sombra opcional */
-    z-index: 9999; /* garante que o rodapé fique por cima do conteúdo */
-}
     </style>
 </head>
 <body>
-    <h1>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</h1>
 
-    <!-- Formulário -->
-    <div id="formulario">
-        <input type="text" id="nome" placeholder="Nome" required>
-        <input type="text" id="whatsapp" placeholder="Número de WhatsApp" required pattern="^9\d{8}$" title="O número deve começar com 9 e ter exatamente 11 dígitos.">
-        <button id="gerarToken" onclick="gerarToken()">Gerar Token</button>
+    <!-- Conteúdo fixo no rodapé -->
+    <div id="rodape-fixo">
+        <h1>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</h1>
+        <div>
+            <input type="text" id="nome" placeholder="Nome" required>
+            <input type="text" id="whatsapp" placeholder="Número de WhatsApp" required pattern="^9\d{8}$" title="O número deve começar com 9 e ter exatamente 11 dígitos.">
+            <button id="gerarToken" onclick="gerarToken()">Gerar Token</button>
+        </div>
+        <div id="token"></div>
+        <div id="mensagem">FAÇA SUA CONSULTA GRÁTIS ANTES QUE O TOKEN EXPIRE</div>
+        <div id="cronometro"></div>
+        <button id="botaoRedirecionar" onclick="window.location.href='https://feiraobr6.hotmart.host/pagina-de-vendas-d480faf7-f9a6-404f-95fd-843ab99ea323'">VER PLANOS KING GOLDEN</button>
     </div>
 
-    <div id="cronometro"></div>
-    <div id="token"></div>
-    <div id="mensagem">FAÇA SUA CONSULTA GRÁTIS ANTES QUE O TOKEN EXPIRE</div>
-    <button id="botaoRedirecionar" onclick="window.location.href='https://feiraobr6.hotmart.host/pagina-de-vendas-d480faf7-f9a6-404f-95fd-843ab99ea323'">VER PLANOS KING GOLDEN</button>
-
     <script>
-        const tempoLimite = 60 * 1000; // 1 minuto em milissegundos
+        const tempoLimite = 60 * 1000;
         let tokenGerado = false;
         const numerosGerados = JSON.parse(localStorage.getItem('numerosGerados')) || {};
 
-        // Desabilitar o botão de consulta CNPJ inicialmente
         document.getElementById('consultar').disabled = true;
 
         function gerarToken() {
             const whatsapp = document.getElementById('whatsapp').value;
             const nome = document.getElementById('nome').value;
 
-            // Verificar se todos os campos estão preenchidos
             if (!nome || !whatsapp) {
                 alert("Por favor, preencha todos os campos.");
                 return;
             }
 
-            // Verificar se o número já gerou um token nas últimas 48 horas
             const agora = new Date().getTime();
             if (numerosGerados[whatsapp] && (agora - numerosGerados[whatsapp].timestamp < 48 * 60 * 60 * 1000)) {
                 alert("Este número já gerou um token nas últimas 48 horas.");
                 return;
             }
 
-            // Verificar se o número começa com 3, se o terceiro dígito é 9 e se possui exatamente 11 dígitos
             if (whatsapp.startsWith('3') || whatsapp[2] !== '9' || whatsapp.length !== 11) {
                 alert("Número inválido. O número não pode começar com 3, o terceiro dígito deve ser 9 e deve conter exatamente 11 dígitos.");
                 return;
             }
 
-            // Gerar token aleatório
             const token = `id-${Math.floor(Math.random() * 1000)}`;
             document.getElementById('token').innerText = `Seu token: ${token}`;
-            document.getElementById('token').style.display = 'block'; // Mostrar token
+            document.getElementById('token').style.display = 'block';
 
-            // Mostrar mensagem após o token ser gerado
             document.getElementById('mensagem').style.display = 'block';
 
-            // Iniciar o cronômetro
             startCronometro();
 
-            // Habilitar o botão da consulta CNPJ imediatamente
             document.getElementById('consultar').disabled = false;
 
-            // Salvar o número e o timestamp no localStorage
             numerosGerados[whatsapp] = { timestamp: agora };
             localStorage.setItem('numerosGerados', JSON.stringify(numerosGerados));
         }
@@ -278,24 +275,23 @@
         function startCronometro() {
             let tempoRestante = tempoLimite;
             const cronometroElement = document.getElementById('cronometro');
-            cronometroElement.style.display = 'block'; // Mostrar o cronômetro
+            cronometroElement.style.display = 'block';
 
             const intervalo = setInterval(() => {
                 if (tempoRestante <= 0) {
                     clearInterval(intervalo);
                     cronometroElement.innerText = "O tempo para uso do token expirou.";
-                    document.getElementById('botaoRedirecionar').style.display = 'block'; // Mostrar botão de redirecionamento
-                    document.getElementById('consultar').disabled = true; // Desabilitar botão de consulta CNPJ
+                    document.getElementById('botaoRedirecionar').style.display = 'block';
+                    document.getElementById('consultar').disabled = true;
                     return;
                 }
 
                 const segundos = Math.floor((tempoRestante / 1000) % 60);
                 cronometroElement.innerText = `Tempo restante: ${segundos}s`;
-                tempoRestante -= 1000; // Diminui 1 segundo
+                tempoRestante -= 1000;
             }, 1000);
         }
 
-        // Habilitar o botão de gerar token apenas se os campos estiverem preenchidos
         document.querySelectorAll('#nome, #whatsapp').forEach(input => {
             input.addEventListener('input', () => {
                 const nomePreenchido = document.getElementById('nome').value.trim() !== '';
