@@ -35,6 +35,10 @@
         button:hover {
             background-color: #218838;
         }
+        .btn-facebook {
+            background-color: #3b5998; /* Azul do Facebook */
+            margin-left: 10px; /* Espaçamento entre o nome do sócio e o botão */
+        }
         #resultado {
             white-space: pre-wrap;
             background-color: #fff;
@@ -56,7 +60,7 @@
             display: flex; /* Flexbox para alinhar o botão com o nome do sócio */
             justify-content: space-between;
             align-items: center;
-            margin: 5px 0; /* Espaçamento entre os sócios */
+            margin: 3px 0; /* Reduzir o espaçamento entre os sócios */
         }
 
         /* Media Query para telas menores */
@@ -101,7 +105,7 @@
                     let sociosHTML = data.qsa.map(socio => `
                         <div class="socio">
                             ${socio.nome}
-                            <button onclick="pesquisarFacebook('${socio.nome}')">Facebook</button>
+                            <button class="btn-facebook" onclick="pesquisarFacebook('${socio.nome}')">Facebook</button>
                         </div>
                     `).join('');
 
