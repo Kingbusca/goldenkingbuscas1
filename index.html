@@ -11,14 +11,12 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
-        h1 {
-            color: gold;
+        h1, h2 {
+            color: #333;
             text-align: center;
         }
         h2 {
-            color: blue; /* Título "Consulta CNPJ" em azul */
-            text-align: center;
-            margin-top: 20px; /* Espaço acima do título */
+            color: gold;
         }
         input[type="text"] {
             padding: 10px;
@@ -39,53 +37,87 @@
             background-color: #218838;
         }
         #resultado {
-            margin-top: 20px;
-        }
-        .campo {
+            white-space: pre-wrap;
             background-color: #fff;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-bottom: 10px; /* Espaço entre campos */
+            margin-top: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .socios {
-            margin: 10px 0;
+        .field {
+            margin-bottom: 10px;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             border-radius: 4px;
-            background-color: #fff;
+            background-color: #f9f9f9;
         }
-        .socio-button {
-            background-color: #007bff; /* Azul */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 5px 10px;
-            cursor: pointer;
-            margin-left: 10px;
+        .facebook-button {
+            background-color: #3b5998;
         }
-        .socio-button:hover {
-            background-color: #0056b3; /* Azul mais escuro */
+        .facebook-button:hover {
+            background-color: #2d4373;
+        }
+        #cronometro {
+            font-size: 24px;
+            color: red;
+            text-align: center;
+            margin: 20px 0;
+        }
+        #comprar-plano {
+            display: none;
+            background-color: #007bff;
+        }
+        #comprar-plano:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>🔍 GOLDEN KING BUSCAS </h1>
-    <h2>Consulta CNPJ</h2> <!-- Título em azul acima da caixa de pesquisa -->
+    <h2>🔍 GOLDEN KING BUSCAS</h2>
+    <div id="cronometro">1:00</div>
+    <h1>Consulta CNPJ</h1>
     <input type="text" id="cnpj" placeholder="Digite o CNPJ">
-    <br> <!-- Quebra de linha para o botão ficar em nova linha -->
-    <button id="consultar">Consultar</button> <!-- Botão abaixo da caixa de CNPJ -->
+    <button id="consultar">Consultar</button>
     
     <div id="resultado"></div>
+    <button id="comprar-plano">Comprar Plano</button>
     
     <script>
-        document.getElementById('consultar').addEventListener('click', function() {
-            let cnpj = document.getElementById('cnpj').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
+        const cnpjInput = document.getElementById('cnpj');
+        const resultadoDiv = document.getElementById('resultado');
+        const consultarButton = document.getElementById('consultar');
+        const comprarButton = document.getElementById('comprar-plano');
+        const cronometroDiv = document.getElementById('cronometro');
+        
+        // Checa se o usuário já consultou nos últimos 24 horas
+        const lastConsultTime = localStorage.getItem('lastConsultTime');
+        if (lastConsultTime && (Date.now() - lastConsultTime < 86400000)) { // 24 horas
+            consultarButton.disabled = true;
+            consultarButton.innerText = 'Consulta Desativada';
+        }
+
+        // Inicia o cronômetro
+        let timeLeft = 60; // 1 minuto
+        const interval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                consultarButton.disabled = true;
+                comprarButton.style.display = 'block';
+                return;
+            }
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            cronometroDiv.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }, 1000);
+
+        consultarButton.addEventListener('click', function() {
+            let cnpj = cnpjInput.value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
             
             // Verifica se o CNPJ está vazio ou tem tamanho incorreto
             if (cnpj === "" || cnpj.length !== 14) {
-                document.getElementById('resultado').innerText = "Por favor, insira um CNPJ válido com 14 dígitos.";
+                resultadoDiv.innerText = "Por favor, insira um CNPJ válido com 14 dígitos.";
                 return;
             }
 
@@ -98,51 +130,47 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Exibe o resultado formatado com emojis em caixas de texto separadas
+                    // Exibe o resultado formatado com emojis
                     let resultadoHTML = `
-                        <div class="campo">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
-                        <div class="campo">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
-                        <div class="campo">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
-                        <div class="campo">☎️ <strong>Telefone:</strong> ${data.telefone ? data.telefone.split(',').map(tel => `${tel.trim()} <button onclick="copyToClipboard('${tel.trim()}')">Copiar</button>`).join('<br>') : 'N/A'}</div>
-                        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
-                        <div class="campo">📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
-                        <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
-                        <div class="campo">🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}</div>
-                        <div class="campo">🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
-                        <div class="campo">📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
-                        <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
-                        <div class="socios">
-                            <strong>👥 Sócios:</strong><br>
-                            ${data.qsa.map(socio => `
-                                <div>${socio.nome} - ${socio.qual} 
-                                <button class="socio-button" onclick="searchFacebook('${socio.nome}')">Facebook</button></div>
-                            `).join('') || 'N/A'}
-                        </div>
-                        <div class="campo">📝 <strong>Natureza Jurídica:</strong> ${data.natureza_juridica || 'N/A'}</div>
-                        <div class="campo">💼 <strong>Atividade Principal:</strong> ${data.atividade_principal[0]?.text || 'N/A'}</div>
-                        <div class="campo">📋 <strong>Atividades Secundárias:</strong> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}</div>
-                        <div class="campo">🗓️ <strong>Data de Situação Especial:</strong> ${data.data_situacao_especial || 'N/A'}</div>
-                        <div class="campo">🔒 <strong>Motivo da Situação:</strong> ${data.motivo_situacao || 'N/A'}</div>
+                        <div class="field">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
+                        <div class="field">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
+                        <div class="field">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
+                        <div class="field">☎️ <strong>Telefone:</strong> ${data.telefone.map((num, index) => `${num} <button onclick="copyToClipboard('${num}')">Copiar</button>`).join('<br>') || 'N/A'}</div>
+                        <div class="field">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
+                        <div class="field">📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
+                        <div class="field">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
+                        <div class="field">🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}</div>
+                        <div class="field">🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
+                        <div class="field">📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
+                        <div class="field">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
+                        <div class="field">👥 <strong>Sócios:</strong> ${data.qsa.map(socio => `${socio.nome} - ${socio.qual} <button class="facebook-button" onclick="searchFacebook('${socio.nome}')">Facebook</button>`).join('<br>') || 'N/A'}</div>
+                        <div class="field">📝 <strong>Natureza Jurídica:</strong> ${data.natureza_juridica || 'N/A'}</div>
+                        <div class="field">💼 <strong>Atividade Principal:</strong> ${data.atividade_principal[0]?.text || 'N/A'}</div>
+                        <div class="field">📋 <strong>Atividades Secundárias:</strong> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}</div>
+                        <div class="field">🗓️ <strong>Data de Situação Especial:</strong> ${data.data_situacao_especial || 'N/A'}</div>
+                        <div class="field">🔒 <strong>Motivo da Situação:</strong> ${data.motivo_situacao || 'N/A'}</div>
                     `;
-                    document.getElementById('resultado').innerHTML = resultadoHTML;
+                    resultadoDiv.innerHTML = resultadoHTML;
+
+                    // Armazena o tempo da última consulta
+                    localStorage.setItem('lastConsultTime', Date.now());
                 })
                 .catch(error => {
                     console.error('Erro:', error);
-                    document.getElementById('resultado').innerText = error.message;
+                    resultadoDiv.innerText = error.message;
                 });
         });
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Número copiado para a área de transferência!');
-            }, (err) => {
-                console.error('Erro ao copiar: ', err);
+                alert('Número copiado: ' + text);
+            }, () => {
+                alert('Erro ao copiar o número.');
             });
         }
 
-        function searchFacebook(name) {
-            const searchUrl = `https://www.facebook.com/search/top/?q=${encodeURIComponent(name)}`;
-            window.open(searchUrl, '_blank');
+        function searchFacebook(nome) {
+            window.open(`https://www.facebook.com/search/top?q=${encodeURIComponent(nome)}`, '_blank');
         }
     </script>
 </body>
