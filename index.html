@@ -7,44 +7,39 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            padding: 20px;
+            background-color: #f4f4f4;
         }
         h1 {
-            margin-bottom: 20px;
+            color: #333;
         }
-        #cnpj {
+        input[type="text"] {
             padding: 10px;
             width: 200px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             border-radius: 4px;
+            margin-right: 10px;
         }
-        #consultar {
-            padding: 10px 20px;
-            background-color: #28a745; /* Verde */
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
-        #consultar:hover {
-            background-color: #218838; /* Verde escuro */
+        button:hover {
+            background-color: #218838;
         }
         #resultado {
             white-space: pre-wrap;
-            background-color: #ffffff;
+            background-color: #fff;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-top: 20px;
-            width: 300px;
-            max-width: 90%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -53,15 +48,15 @@
     <input type="text" id="cnpj" placeholder="Digite o CNPJ">
     <button id="consultar">Consultar</button>
     
-    <pre id="resultado"></pre>
+    <div id="resultado"></div>
     
     <script>
         document.getElementById('consultar').addEventListener('click', function() {
-            let cnpj = document.getElementById('cnpj').value.trim().replace(/[^\d]+/g, ''); // Remover caracteres não numéricos
-
-            // Verifica se o CNPJ está vazio
-            if (cnpj === "") {
-                document.getElementById('resultado').innerText = "Por favor, insira um CNPJ.";
+            let cnpj = document.getElementById('cnpj').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
+            
+            // Verifica se o CNPJ está vazio ou tem tamanho incorreto
+            if (cnpj === "" || cnpj.length !== 14) {
+                document.getElementById('resultado').innerText = "Por favor, insira um CNPJ válido com 14 dígitos.";
                 return;
             }
 
@@ -74,33 +69,18 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Exibe o resultado formatado
-                    const resultado = `
-📅 Abertura: ${data.abertura}
-🔍 Situação: ${data.situacao}
-🏢 Tipo: ${data.tipo}
-🏷️ Nome: ${data.nome}
-🏷️ Fantasia: ${data.fantasia}
-🏛️ Porte: ${data.porte}
-📝 Natureza Jurídica: ${data.natureza_juridica}
-💼 Atividade Principal: ${data.atividade_principal[0]?.text || 'N/A'}
-📞 Telefone: ${data.telefone}
-📧 Email: ${data.email}
-🏙️ Logradouro: ${data.logradouro}, ${data.numero} - ${data.bairro} - ${data.municipio} - ${data.uf}, ${data.cep}
-💰 Capital Social: R$ ${data.capital_social}
-📆 Data da Situação: ${data.data_situacao}
-🔄 Última Atualização: ${data.ultima_atualizacao}
-👥 Sócios: ${data.qsa.map(socio => `${socio.nome} - ${socio.qual}`).join(', ') || 'N/A'}
-`;
-
-                    // Adicionando atividades secundárias
-                    if (data.atividades_secundarias && data.atividades_secundarias.length > 0) {
-                        const atividadesSecundarias = data.atividades_secundarias.map(atividade => atividade.text).join(', ');
-                        resultado += `📋 Atividades Secundárias: ${atividadesSecundarias}`;
-                    }
-
-                    // Atualiza o resultado
-                    document.getElementById('resultado').innerText = resultado;
+                    // Exibe o resultado formatado com emojis
+                    let resultadoHTML = `
+                        📜 Razão Social: ${data.nome || 'N/A'}
+                        🏢 Nome Fantasia: ${data.fantasia || 'N/A'}
+                        📍 Endereço: ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
+                        ☎️ Telefone: ${data.telefone || 'N/A'}
+                        📧 Email: ${data.email || 'N/A'}
+                        📅 Data de Abertura: ${data.abertura || 'N/A'}
+                        🔍 Situação: ${data.situacao || 'N/A'}
+                        🔒 Capital Social: R$ ${data.capital_social || 'N/A'}
+                    `;
+                    document.getElementById('resultado').innerHTML = resultadoHTML;
                 })
                 .catch(error => {
                     console.error('Erro:', error);
