@@ -102,7 +102,7 @@
                         <div class="campo">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
                         <div class="campo">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
                         <div class="campo">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
-                        <div class="campo">☎️ <strong>Telefone:</strong> ${data.telefone || 'N/A'} <button onclick="copyToClipboard('${data.telefone || ''}')">Copiar</button></div>
+                        <div class="campo">☎️ <strong>Telefone:</strong> ${data.telefone ? data.telefone.split(',').map(tel => `${tel.trim()} <button onclick="copyToClipboard('${tel.trim()}')">Copiar</button>`).join('<br>') : 'N/A'}</div>
                         <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
                         <div class="campo">📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
                         <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
@@ -133,7 +133,7 @@
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Números de telefone copiados para a área de transferência!');
+                alert('Número copiado para a área de transferência!');
             }, (err) => {
                 console.error('Erro ao copiar: ', err);
             });
