@@ -39,12 +39,14 @@
             background-color: #218838;
         }
         #resultado {
-            white-space: pre-wrap;
+            margin-top: 20px;
+        }
+        .campo {
             background-color: #fff;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-top: 20px;
+            margin-bottom: 10px; /* Espaço entre campos */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .socios {
@@ -52,6 +54,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            background-color: #fff;
         }
         .socio-button {
             background-color: #007bff; /* Azul */
@@ -94,31 +97,31 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Exibe o resultado formatado com emojis
+                    // Exibe o resultado formatado com emojis em caixas de texto separadas
                     let resultadoHTML = `
-                        📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}
-                        🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}
-                        📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}
-                        ☎️ <strong>Telefone:</strong> ${data.telefone || 'N/A'} <button onclick="copyToClipboard('${data.telefone || ''}')">Copiar</button>
-                        📧 <strong>Email:</strong> ${data.email || 'N/A'}
-                        📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}
-                        🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}
-                        🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}
-                        🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}
-                        📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}
-                        🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}
+                        <div class="campo">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
+                        <div class="campo">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
+                        <div class="campo">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
+                        <div class="campo">☎️ <strong>Telefone:</strong> ${data.telefone || 'N/A'} <button onclick="copyToClipboard('${data.telefone || ''}')">Copiar</button></div>
+                        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
+                        <div class="campo">📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
+                        <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
+                        <div class="campo">🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}</div>
+                        <div class="campo">🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
+                        <div class="campo">📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
+                        <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
                         <div class="socios">
                             <strong>👥 Sócios:</strong><br>
                             ${data.qsa.map(socio => `
-                                ${socio.nome} - ${socio.qual} 
-                                <button class="socio-button" onclick="searchFacebook('${socio.nome}')">Facebook</button>
-                            `).join('<br>') || 'N/A'}
+                                <div>${socio.nome} - ${socio.qual} 
+                                <button class="socio-button" onclick="searchFacebook('${socio.nome}')">Facebook</button></div>
+                            `).join('') || 'N/A'}
                         </div>
-                        📝 <strong>Natureza Jurídica:</strong> ${data.natureza_juridica || 'N/A'}
-                        💼 <strong>Atividade Principal:</strong> ${data.atividade_principal[0]?.text || 'N/A'}
-                        📋 <strong>Atividades Secundárias:</strong> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}
-                        🗓️ <strong>Data de Situação Especial:</strong> ${data.data_situacao_especial || 'N/A'}
-                        🔒 <strong>Motivo da Situação:</strong> ${data.motivo_situacao || 'N/A'}
+                        <div class="campo">📝 <strong>Natureza Jurídica:</strong> ${data.natureza_juridica || 'N/A'}</div>
+                        <div class="campo">💼 <strong>Atividade Principal:</strong> ${data.atividade_principal[0]?.text || 'N/A'}</div>
+                        <div class="campo">📋 <strong>Atividades Secundárias:</strong> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}</div>
+                        <div class="campo">🗓️ <strong>Data de Situação Especial:</strong> ${data.data_situacao_especial || 'N/A'}</div>
+                        <div class="campo">🔒 <strong>Motivo da Situação:</strong> ${data.motivo_situacao || 'N/A'}</div>
                     `;
                     document.getElementById('resultado').innerHTML = resultadoHTML;
                 })
