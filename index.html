@@ -250,16 +250,19 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Exibe o resultado formatado
-                    let resultadoHTML = `
-                        <div class="campo">🆔 <strong>Nome:</strong> ${data.nome || 'N/A'}</div>
-                        <div class="campo">📍 <strong>Endereço:</strong> ${data.endereco || 'N/A'}</div>
-                        <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone || 'N/A'}</div>
-                        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
-                        <div class="campo">🔒 <strong>Situacao:</strong> ${data.situacao || 'N/A'}</div>
-                    `;
-                    document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
-                })
+    // Exibe o resultado formatado
+    let resultadoHTML = `
+        <div class="campo">👤 <strong>Nome:</strong> ${data.nome || 'N/A'}</div>
+        <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${data.data_nascimento || 'N/A'}</div>
+        <div class="campo">🏠 <strong>Endereço:</strong> ${data.endereco || 'N/A'}</div>
+        <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone || 'N/A'}</div>
+        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
+        <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
+        <div class="campo">📅 <strong>Data de Situação:</strong> ${data.data_situacao || 'N/A'}</div>
+        <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
+    `;
+    document.getElementById('resultado-cpf').innerHTML = resultadoHTML;
+})
                 .catch(error => {
                     console.error('Erro:', error);
                     document.getElementById('resultadoCPF').innerText = error.message;
