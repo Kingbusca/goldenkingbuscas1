@@ -256,6 +256,7 @@
     const nome = data.nome ? data.nome : 'N/A';
     const nomeMae = data.nome_mae ? data.nome_mae : 'N/A';
     const dataNascimento = data.data_nascimento ? data.data_nascimento : 'N/A';
+    const telefone = data.contatos ? data.contatos[0].telefone : 'N/A'; // Exemplo de acesso a um array
 
     // Exibindo os resultados no HTML
     let resultadoHTML = `
@@ -264,7 +265,8 @@
         <div class="campo">👤 <strong>Nome:</strong> ${nome}</div>
         <div class="campo">👩‍👦 <strong>Nome da Mãe:</strong> ${nomeMae}</div>
         <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${dataNascimento}</div>
-    `;
+        <div class="campo">📞 <strong>Telefone:</strong> ${telefone}</div>
+        `;
 
     document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
 })
