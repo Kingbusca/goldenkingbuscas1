@@ -57,7 +57,7 @@
     
     <script>
         document.getElementById('consultar').addEventListener('click', function() {
-            let cnpj = document.getElementById('cnpj').value.trim().replace(/[^\d]+/g, '');
+            let cnpj = document.getElementById('cnpj').value.trim().replace(/[^\d]+/g, ''); // Remover caracteres não numéricos
 
             // Verifica se o CNPJ está vazio
             if (cnpj === "") {
