@@ -249,24 +249,26 @@
         return response.json();
     })
     .then(data => {
-        console.log(data); // Verifique a estrutura do objeto data
+    console.log('Resposta da API:', data); // Exibe toda a resposta no console para depuração
 
-        let resultadoHTML = `
+    // Extraindo apenas os dados específicos
+    const cpf = data.cpf ? data.cpf : 'N/A';
+    const nome = data.nome ? data.nome : 'N/A';
+    const nomeMae = data.nome_mae ? data.nome_mae : 'N/A';
+    const dataNascimento = data.data_nascimento ? data.data_nascimento : 'N/A';
+
+    // Exibindo os resultados no HTML
+    let resultadoHTML = `
         <h3>Informações Pessoais</h3>
-        <div class="campo">📜 <strong>CPF:</strong> ${data.cpf ? data.cpf : 'N/A'}</div>
-        <div class="campo">👤 <strong>Nome:</strong> ${data.nome ? data.nome : 'N/A'}</div>
-        <div class="campo">👩‍👦 <strong>Nome da Mãe:</strong> ${data.nome_mae ? data.nome_mae : 'N/A'}</div>
-        <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${data.data_nascimento ? data.data_nascimento : 'N/A'}</div>
-        <div class="campo">🏠 <strong>Endereço:</strong> ${data.endereco ? data.endereco : 'N/A'}</div>
-        <div class="campo">📞 <strong>Telefone:</strong> ${data.telefone ? data.telefone : 'N/A'}</div>
-        <div class="campo">📧 <strong>Email:</strong> ${data.email ? data.email : 'N/A'}</div>
-        <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao ? data.situacao : 'N/A'}</div>
-        <div class="campo">📅 <strong>Data de Situação:</strong> ${data.data_situacao ? data.data_situacao : 'N/A'}</div>
-        <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao ? data.ultima_atualizacao : 'N/A'}</div>
-        `;
+        <div class="campo">📜 <strong>CPF:</strong> ${cpf}</div>
+        <div class="campo">👤 <strong>Nome:</strong> ${nome}</div>
+        <div class="campo">👩‍👦 <strong>Nome da Mãe:</strong> ${nomeMae}</div>
+        <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${dataNascimento}</div>
+    `;
 
-        document.getElementById('resultadoCPF').innerHTML = resultadoHTML; // Atualiza com os novos dados
-    })
+    document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
+})
+
     .catch(error => {
         console.error('Erro:', error);
         document.getElementById('resultadoCPF').innerText = error.message;
