@@ -15,17 +15,26 @@
             color: rgb(155, 0, 0);
             text-align: center;
         }
+        .consulta-quadro {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            width: 300px; /* Largura do quadro */
+            text-align: center; /* Centraliza o conteúdo dentro do quadro */
+        }
         h2 {
             color: blue; /* Título "Consulta CNPJ" em azul */
-            text-align: center;
-            margin-top: 20px; /* Espaço acima do título */
+            margin: 0 0 10px; /* Margem abaixo do título */
         }
         input[type="text"] {
             padding: 10px;
-            width: 200px;
+            width: calc(100% - 22px); /* Ajusta a largura para caber dentro do quadro */
             border: 1px solid #ccc;
             border-radius: 4px;
-            margin-right: 10px;
+            margin-bottom: 10px; /* Espaço abaixo do input */
         }
         button {
             padding: 10px 15px;
@@ -72,10 +81,13 @@
 </head>
 <body>
     <h1>🔍 GOLDEN KING BUSCAS </h1>
-    <h2>Consulta CNPJ</h2> <!-- Título em azul acima da caixa de pesquisa -->
-    <input type="text" id="cnpj" placeholder="Digite o CNPJ">
-    <br> <!-- Quebra de linha para o botão ficar em nova linha -->
-    <button id="consultar">Consultar</button> <!-- Botão abaixo da caixa de CNPJ -->
+    
+    <div class="consulta-quadro">
+        <h2>Consulta CNPJ</h2>
+        <input type="text" id="cnpj" placeholder="Digite o CNPJ">
+        <br>
+        <button id="consultar">Consultar</button>
+    </div>
     
     <div id="resultado"></div>
     
@@ -146,6 +158,7 @@
         }
     </script>
 </body>
+</html>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -162,7 +175,7 @@
         }
         /* Estilo fixo para o rodapé */
         #rodape-fixo {
-            position: flex;
+            position: relative;
             bottom: 0;
             left: 0;
             width: 100%; /* Altera para 100% */
