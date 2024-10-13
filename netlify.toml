@@ -5,6 +5,22 @@
   force = true
 [[redirects]]
   from = "/consulta-cpf/*"
-  to = "https://api.dbconsultas.com/api/v1/61f16770-7f8e-4683-bded-be575dd2e666/cpf/:splat"
+  to = "https://kingsearch.me/endpoint/cpf.php?api_key=zWqVX0cwhL&cpf=:splat"
   status = 200
   force = true
+[consulta_cpf]
+url = "https://kingsearch.me/endpoint/cpf.php?api_key=zWqVX0cwhL&cpf="
+metodo = "GET"
+timeout = 30
+
+[campos]
+cpf = "cpf"
+nome = "nome"
+nome_mae = "nome_mae"
+data_nascimento = "data_nascimento"
+endereco = "endereco"
+telefone = "telefone"
+email = "email"
+situacao = "situacao"
+data_situacao = "data_situacao"
+ultima_atualizacao = "ultima_atualizacao"
