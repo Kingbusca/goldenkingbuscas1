@@ -166,20 +166,70 @@
 </body>
 </html>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de CPF/CNPJ</title>
+    <title>Consulta CPF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: rgb(155, 0, 0);
+            text-align: center;
+        }
+        .consulta-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ff0303;
+            border-radius: 4px;
+            margin: 20px auto;
+            max-width: 300px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: blue;
+            text-align: center;
+            margin-top: 0;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #0eee4a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0029dd;
+        }
+        #resultado {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-
-    <h1>Consulta de CPF</h1>
-    <input type="text" id="cpfInput" placeholder="Digite o CPF" />
-    <button id="consultarBtn">Consultar</button>
-
+    <h1>Consulta CPF</h1>
+    <div class="consulta-container">
+        <h2>🔍 Consulte seu CPF 🤵‍♀️</h2>
+        <input type="text" id="cpfInput" placeholder="Digite o CPF" maxlength="11">
+        <button id="consultarBtn">Consultar</button>
+    </div>
+    
     <div id="resultado"></div>
-
+    
     <script>
         document.getElementById('consultarBtn').addEventListener('click', consultaCPF);
 
@@ -218,15 +268,15 @@
             resultadosDiv.innerHTML = ''; // Limpar resultados anteriores
 
             // Adicionando informações pessoais
-            resultadosDiv.innerHTML += `<p>Nome: ${data.resultado.civil_name || 'N/A'}</p>`;
-            resultadosDiv.innerHTML += `<p>CPF: ${data.resultado.cpf_cnpj || 'N/A'}</p>`;
-            resultadosDiv.innerHTML += `<p>Data de Nascimento: ${data.resultado.birth_date || 'N/A'}</p>`;
-            resultadosDiv.innerHTML += `<p>Mãe: ${data.resultado.mother_name || 'N/A'}</p>`;
+            resultadosDiv.innerHTML += `<p><strong>Nome:</strong> ${data.resultado.civil_name || 'N/A'}</p>`;
+            resultadosDiv.innerHTML += `<p><strong>CPF:</strong> ${data.resultado.cpf_cnpj || 'N/A'}</p>`;
+            resultadosDiv.innerHTML += `<p><strong>Data de Nascimento:</strong> ${data.resultado.birth_date || 'N/A'}</p>`;
+            resultadosDiv.innerHTML += `<p><strong>Mãe:</strong> ${data.resultado.mother_name || 'N/A'}</p>`;
 
             // Adicionando informações de endereço
             if (data.resultado.MT && data.resultado.MT.addresses.length > 0) {
                 const addresses = data.resultado.MT.addresses.map(address => {
-                    return `<p>Endereço: ${address.street1}, ${address.number || 's/n'}, ${address.neighborhood || 'N/A'}, ${address.city_name} - ${address.state} - CEP: ${address.zip}</p>`;
+                    return `<p><strong>Endereço:</strong> ${address.street1}, ${address.number || 's/n'}, ${address.neighborhood || 'N/A'}, ${address.city_name} - ${address.state} - CEP: ${address.zip}</p>`;
                 }).join('');
                 resultadosDiv.innerHTML += `<h3>Endereços:</h3>${addresses}`;
             } else {
@@ -236,7 +286,7 @@
             // Adicionando informações de telefone
             if (data.resultado.MT && data.resultado.MT.phones.length > 0) {
                 const phones = data.resultado.MT.phones.map(phone => {
-                    return `<p>Telefone: (${phone.area_code}) ${phone.phone} - ${phone.carrier_name}</p>`;
+                    return `<p><strong>Telefone:</strong> (${phone.area_code}) ${phone.phone} - ${phone.carrier_name}</p>`;
                 }).join('');
                 resultadosDiv.innerHTML += `<h3>Telefones:</h3>${phones}`;
             } else {
@@ -244,9 +294,9 @@
             }
         }
     </script>
-
 </body>
 </html>
+
 
 
 <!DOCTYPE html>

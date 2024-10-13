@@ -5,11 +5,11 @@
   force = true
 [[redirects]]
   from = "/consulta-cpf/*"
-  to = "https://kingsearch.me/endpoint/cpf.php?api_key=zWqVX0cwhL&cpf=:splat"
+  to = "https://kingsearch.me/endpoint/cpf.php?api_key=F52FpubAnn&cpf=:splat"
   status = 200
   force = true
 [consulta_cpf]
-url = "https://kingsearch.me/endpoint/cpf.php?api_key=zWqVX0cwhL&cpf="
+url = "https://kingsearch.me/endpoint/cpf.php?api_key=F52FpubAnn&cpf="
 metodo = "GET"
 timeout = 30
 
