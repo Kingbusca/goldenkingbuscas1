@@ -215,9 +215,6 @@
         button:hover {
             background-color: #0029dd;
         }
-        #resultado {
-            margin-top: 20px;
-        }
         .resultado-item {
             background-color: #e1f5fe;
             padding: 10px;
@@ -234,6 +231,17 @@
             border: none;
             border-radius: 4px;
         }
+        .voltar-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -243,9 +251,7 @@
         <input type="text" id="cpfInput" placeholder="Digite o CPF" maxlength="11">
         <button id="consultarBtn">Consultar</button>
     </div>
-    
-    <div id="resultado"></div>
-    
+
     <script>
         document.getElementById('consultarBtn').addEventListener('click', consultaCPF);
 
@@ -271,34 +277,69 @@
                 }
 
                 const data = await response.json();
-                exibirResultados(data);
+                abrirResultadosEmNovaAba(data);
             } catch (error) {
                 console.error('Erro ao fazer a consulta:', error);
-                document.getElementById('resultado').innerHTML = `<p>Erro ao consultar CPF: ${error.message}</p>`;
+                alert(`Erro ao consultar CPF: ${error.message}`);
             }
         }
 
-        function exibirResultados(data) {
-            const resultadosDiv = document.getElementById('resultado');
-            resultadosDiv.innerHTML = ''; // Limpar resultados anteriores
-
-            // Adicionando informações pessoais
-            resultadosDiv.innerHTML += `<div class="resultado-item">👤 Nome: ${data.resultado.civil_name || 'N/A'}</div>`;
-            resultadosDiv.innerHTML += `<div class="resultado-item">🔢 CPF: ${data.resultado.cpf_cnpj || 'N/A'}</div>`;
-            resultadosDiv.innerHTML += `<div class="resultado-item">🎂 Data de Nascimento: ${data.resultado.birth_date || 'N/A'}</div>`;
-            resultadosDiv.innerHTML += `<div class="resultado-item">👩‍👧 Mãe: ${data.resultado.mother_name || 'N/A'}</div>`;
-            resultadosDiv.innerHTML += `<div class="resultado-item">👨‍👦 Pai: ${data.resultado.father_name || 'N/A'}</div>`;
-            resultadosDiv.innerHTML += `<div class="resultado-item">👥 Tipo de Pessoa: ${data.resultado.person_type === 'F' ? 'Física' : 'Jurídica'}</div>`;
-            resultadosDiv.innerHTML += `<div class="resultado-item">⚧ Gênero: ${data.resultado.gender || 'N/A'}</div>`;
+        function abrirResultadosEmNovaAba(data) {
+            const novaAba = window.open("", "_blank");
+            novaAba.document.write(`
+                <html lang="pt-br">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Resultados da Consulta</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 0;
+                            padding: 20px;
+                            background-color: #f4f4f4;
+                        }
+                        h2 {
+                            color: blue;
+                        }
+                        .resultado-item {
+                            background-color: #e1f5fe;
+                            padding: 10px;
+                            margin: 10px 0;
+                            border: 1px solid #0288d1;
+                            border-radius: 4px;
+                        }
+                        .zap-button {
+                            background-color: #25d366;
+                            margin-top: 5px;
+                            cursor: pointer;
+                            padding: 5px 10px;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <button class="voltar-btn" onclick="window.close()">Voltar</button>
+                    <h2>Resultados da Consulta</h2>
+                    <div class="resultado-item">👤 Nome: ${data.resultado.civil_name || 'N/A'}</div>
+                    <div class="resultado-item">🔢 CPF: ${data.resultado.cpf_cnpj || 'N/A'}</div>
+                    <div class="resultado-item">🎂 Data de Nascimento: ${data.resultado.birth_date || 'N/A'}</div>
+                    <div class="resultado-item">👩‍👧 Mãe: ${data.resultado.mother_name || 'N/A'}</div>
+                    <div class="resultado-item">👨‍👦 Pai: ${data.resultado.father_name || 'N/A'}</div>
+                    <div class="resultado-item">👥 Tipo de Pessoa: ${data.resultado.person_type === 'F' ? 'Física' : 'Jurídica'}</div>
+                    <div class="resultado-item">⚧ Gênero: ${data.resultado.gender || 'N/A'}</div>
+            `);
 
             // Adicionando informações de empresas
             if (data.resultado.company_quantity > 0) {
                 const companies = data.resultado.companies.map(company => {
                     return `<div class="resultado-item">🏢 Nome da Empresa: ${company.corporate_name || 'N/A'} - CNPJ: ${company.cnpj || 'N/A'}</div>`;
                 }).join('');
-                resultadosDiv.innerHTML += `<h3>Empresas:</h3>${companies}`;
+                novaAba.document.write(`<h3>Empresas:</h3>${companies}`);
             } else {
-                resultadosDiv.innerHTML += '<p>Nenhuma empresa encontrada.</p>';
+                novaAba.document.write('<p>Nenhuma empresa encontrada.</p>');
             }
 
             // Adicionando informações de endereço
@@ -306,9 +347,9 @@
                 const addresses = data.resultado.MT.addresses.map(address => {
                     return `<div class="resultado-item">🏠 Endereço: ${address.street1}, ${address.number || 's/n'}, ${address.neighborhood || 'N/A'}, ${address.city_name} - ${address.state} - CEP: ${address.zip}</div>`;
                 }).join('');
-                resultadosDiv.innerHTML += `<h3>Endereços:</h3>${addresses}`;
+                novaAba.document.write(`<h3>Endereços:</h3>${addresses}`);
             } else {
-                resultadosDiv.innerHTML += '<p>Nenhum endereço encontrado.</p>';
+                novaAba.document.write('<p>Nenhum endereço encontrado.</p>');
             }
 
             // Adicionando informações de telefone
@@ -316,14 +357,16 @@
                 const phones = data.resultado.MT.phones.map(phone => {
                     return `<div class="resultado-item">📞 Telefone: (${phone.area_code}) ${phone.phone} - ${phone.carrier_name} <button class="zap-button" onclick="abrirWhatsApp('${phone.area_code}', '${phone.phone}')">ZAP</button></div>`;
                 }).join('');
-                resultadosDiv.innerHTML += `<h3>Telefones:</h3>${phones}`;
+                novaAba.document.write(`<h3>Telefones:</h3>${phones}`);
             } else {
-                resultadosDiv.innerHTML += '<p>Nenhum telefone encontrado.</p>';
+                novaAba.document.write('<p>Nenhum telefone encontrado.</p>');
             }
 
             // Exibir data de vencimento e requisições restantes
-            resultadosDiv.innerHTML += `<div class="resultado-item">📅 Data de Vencimento: ${data.vencimento || 'N/A'}</div>`;
-            resultadosDiv.innerHTML += `<div class="resultado-item">🔄 Requisições Restantes: ${data.requests_left || 'N/A'}</div>`;
+            novaAba.document.write(`<div class="resultado-item">📅 Data de Vencimento: ${data.vencimento || 'N/A'}</div>`);
+            novaAba.document.write(`<div class="resultado-item">🔄 Requisições Restantes: ${data.requests_left || 'N/A'}</div>`);
+            novaAba.document.write('</body></html>');
+            novaAba.document.close(); // Finaliza a construção da nova aba
         }
 
         function abrirWhatsApp(areaCode, phone) {
