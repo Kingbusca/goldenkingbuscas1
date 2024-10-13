@@ -80,10 +80,14 @@
     </style>
 </head>
 <body>
-    <h1>🔍 GOLDEN KING BUSCAS </h1>
+    <h1>🔍 GOLDEN KING BUSCAS 👣 </h1>     <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />
     
+    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="200" height="30" />
+
     <div class="consulta-quadro">
-        <h2>Consulta CNPJ</h2>
+        <h2>🔍Consulta CNPJ📈</h2>
+        <h2> <span style="color: rgb(12, 255, 52);">On</span></p>
+        <p> <span style="color: blue;"></span> </p>
         <input type="text" id="cnpj" placeholder="Digite o CNPJ">
         <br>
         <button id="consultar">Consultar</button>
@@ -177,9 +181,9 @@
             text-align: center;
         }
         .consulta-container {
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid #ff0303;
             border-radius: 4px;
             margin: 20px auto; /* Centraliza a caixa */
             max-width: 300px; /* Define uma largura máxima */
@@ -199,7 +203,7 @@
         }
         button {
             padding: 10px 15px;
-            background-color: #28a745;
+            background-color: #0eee4a;
             color: white;
             border: none;
             border-radius: 4px;
@@ -224,7 +228,9 @@
 </head>
 <body>
     <div class="consulta-container">
-        <h2>Consulta CPF</h2>
+        <h2>🔍Consulta CPF🤵‍♀️</h2>
+                     <h2> <span style="color: rgb(241, 8, 8);">Off</span></p>
+        <p> <span style="color: blue;"></span> </p>
         <input type="text" id="cpf" placeholder="Digite o CPF">
         <button id="consultarCPF">Consultar</button>
     </div>
@@ -252,21 +258,33 @@
     console.log('Resposta da API:', data); // Exibe toda a resposta no console para depuração
 
     // Extraindo apenas os dados específicos
-    const cpf = data.cpf ? data.cpf : 'N/A';
-    const nome = data.nome ? data.nome : 'N/A';
-    const nomeMae = data.nome_mae ? data.nome_mae : 'N/A';
-    const dataNascimento = data.data_nascimento ? data.data_nascimento : 'N/A';
-    const telefone = data.contatos ? data.contatos[0].telefone : 'N/A'; // Exemplo de acesso a um array
+    const cpf = data.cpf || 'N/A';
+const nome = data.nome || 'N/A';
+const nomeMae = data.nome_mae || 'N/A';
+const dataNascimento = data.nasc ? new Date(data.nasc).toLocaleDateString() : 'N/A'; // Formatação da data
+const endereco = (data.enderecos && data.enderecos.length > 0) ? `${data.enderecos[0].logradouro}, ${data.enderecos[0].tipo_logradouro}` : 'N/A';
+const telefones = (data.telefones && data.telefones.length > 0) ? data.telefones.map(t => t.telefone).join(', ') : 'N/A';
+const email = (data.emails && data.emails.length > 0) ? data.emails[0].email : 'N/A'; // Pega o primeiro email
+const situacao = data.cd_sit_cad || 'N/A';
+const dtSituacao = data.dt_sit_cad || 'N/A';
+const renda = data.renda || 'N/A';
+const poderAquisitivo = data.poder_aquisitivo?.poder_aquisitivo || 'N/A';
 
-    // Exibindo os resultados no HTML
-    let resultadoHTML = `
-        <h3>Informações Pessoais</h3>
-        <div class="campo">📜 <strong>CPF:</strong> ${cpf}</div>
-        <div class="campo">👤 <strong>Nome:</strong> ${nome}</div>
-        <div class="campo">👩‍👦 <strong>Nome da Mãe:</strong> ${nomeMae}</div>
-        <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${dataNascimento}</div>
-        <div class="campo">📞 <strong>Telefone:</strong> ${telefone}</div>
-        `;
+let resultadoHTML = `
+    <h3>Informações Pessoais</h3>
+    <div class="campo">📜 <strong>CPF:</strong> ${cpf}</div>
+    <div class="campo">👤 <strong>Nome:</strong> ${nome}</div>
+    <div class="campo">👩‍👦 <strong>Nome da Mãe:</strong> ${nomeMae}</div>
+    <div class="campo">🎂 <strong>Data de Nascimento:</strong> ${dataNascimento}</div>
+    <div class="campo">🏠 <strong>Endereço:</strong> ${endereco}</div>
+    <div class="campo">📞 <strong>Telefone(s):</strong> ${telefones}</div>
+    <div class="campo">📧 <strong>Email:</strong> ${email}</div>
+    <div class="campo">🔍 <strong>Situação:</strong> ${situacao}</div>
+    <div class="campo">📅 <strong>Data de Situação:</strong> ${dtSituacao}</div>
+    <div class="campo">💰 <strong>Renda:</strong> ${renda}</div>
+    <div class="campo">📊 <strong>Poder Aquisitivo:</strong> ${poderAquisitivo}</div>
+`;
+
 
     document.getElementById('resultadoCPF').innerHTML = resultadoHTML;
 })
