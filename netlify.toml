@@ -8,6 +8,40 @@
   to = "https://ghostapis.com.br/api.php?token=9fef76f34c1c0cf627a6f9d67941b5ef&cpf=:splat"
   status = 200
   force = true
+  [[redirects]]
+  from = "/consulta-cep/*"
+  to = "https://ghostapis.com.br/api.php?token=9fef76f34c1c0cf627a6f9d67941b5ef&cep=:splat"
+  status = 200
+  force = true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [consulta_cpf]
 url = "https://kingsearch.me/endpoint/cpf.php?api_key=QacFjkQbz1&cpf=:splat"
 metodo = "GET"
