@@ -47,9 +47,6 @@
         button:hover {
             background-color: #0029dd;
         }
-        #resultado {
-            margin-top: 20px;
-        }
         .campo {
             background-color: #fff;
             padding: 10px;
@@ -57,40 +54,6 @@
             border-radius: 4px;
             margin-bottom: 10px; /* Espaço entre campos */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .tabs {
-            display: flex;
-            cursor: pointer;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #e7e7e7;
-            border-radius: 4px;
-        }
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 4px 4px 0 0;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s;
-        }
-        .tab:hover {
-            background-color: #ddd;
-        }
-        .tab.active {
-            background-color: #fff;
-            border-bottom: 1px solid transparent;
-        }
-        .tab-content {
-            display: none;
-            border: 1px solid #ddd;
-            border-radius: 0 0 4px 4px;
-            padding: 10px;
-            background-color: #fff;
-        }
-        .tab-content.active {
-            display: block;
         }
         .socios {
             margin: 10px 0;
@@ -128,15 +91,13 @@
         <button id="consultar">Consultar</button>
     </div>
     
-    <div id="resultado"></div>
-    
     <script>
         document.getElementById('consultar').addEventListener('click', function() {
             let cnpj = document.getElementById('cnpj').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
             
             // Verifica se o CNPJ está vazio ou tem tamanho incorreto
             if (cnpj === "" || cnpj.length !== 14) {
-                document.getElementById('resultado').innerText = "Por favor, insira um CNPJ válido com 14 dígitos.";
+                alert("Por favor, insira um CNPJ válido com 14 dígitos.");
                 return;
             }
 
@@ -149,13 +110,51 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Cria abas e conteúdo
-                    let resultadoHTML = `
-                        <div class="tabs">
-                            <div class="tab active" onclick="showTab('info')">Informações</div>
-                            <div class="tab" onclick="showTab('socios')">Sócios</div>
-                        </div>
-                        <div class="tab-content active" id="info">
+                    // Abre uma nova aba e escreve o conteúdo dos resultados
+                    const resultadoWindow = window.open('', '_blank');
+                    resultadoWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html lang="pt-br">
+                        <head>
+                            <meta charset="UTF-8">
+                            <title>Resultados da Consulta CNPJ</title>
+                            <style>
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    margin: 0;
+                                    padding: 20px;
+                                    background-color: #f4f4f4;
+                                }
+                                h1 {
+                                    color: rgb(155, 0, 0);
+                                    text-align: center;
+                                }
+                                .campo {
+                                    background-color: #fff;
+                                    padding: 10px;
+                                    border: 1px solid #ddd;
+                                    border-radius: 4px;
+                                    margin-bottom: 10px;
+                                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                                }
+                                .voltar {
+                                    background-color: #007bff;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 4px;
+                                    padding: 10px 15px;
+                                    cursor: pointer;
+                                    display: block;
+                                    margin: 20px auto;
+                                    text-align: center;
+                                }
+                                .voltar:hover {
+                                    background-color: #0056b3;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>Resultados da Consulta CNPJ</h1>
                             <div class="campo">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
                             <div class="campo">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
                             <div class="campo">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
@@ -167,8 +166,6 @@
                             <div class="campo">🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
                             <div class="campo">📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
                             <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
-                        </div>
-                        <div class="tab-content" id="socios">
                             <div class="socios">
                                 <strong>👥 Sócios:</strong><br>
                                 ${data.qsa.map(socio => `
@@ -176,41 +173,33 @@
                                     <button class="socio-button" onclick="searchFacebook('${socio.nome}')">Facebook</button></div>
                                 `).join('') || 'N/A'}
                             </div>
-                        </div>
-                    `;
-                    document.getElementById('resultado').innerHTML = resultadoHTML;
+                            <div class="campo">📝 <strong>Natureza Jurídica:</strong> ${data.natureza_juridica || 'N/A'}</div>
+                            <div class="campo">💼 <strong>Atividade Principal:</strong> ${data.atividade_principal[0]?.text || 'N/A'}</div>
+                            <div class="campo">📋 <strong>Atividades Secundárias:</strong> ${data.atividade_secundaria.map(atividade => atividade.text).join(', ') || 'N/A'}</div>
+                            <button class="voltar" onclick="window.close();">Voltar</button>
+
+                            <script>
+                                function copyToClipboard(text) {
+                                    navigator.clipboard.writeText(text).then(function() {
+                                        alert('Número copiado: ' + text);
+                                    }, function(err) {
+                                        console.error('Erro ao copiar: ', err);
+                                    });
+                                }
+                                function searchFacebook(nome) {
+                                    const url = 'https://www.facebook.com/search/top/?q=' + encodeURIComponent(nome);
+                                    window.open(url, '_blank');
+                                }
+                            </script>
+                        </body>
+                        </html>
+                    `);
+                    resultadoWindow.document.close(); // Fecha o documento da nova aba
                 })
                 .catch(error => {
-                    console.error('Erro:', error);
-                    document.getElementById('resultado').innerText = error.message;
+                    alert('Erro: ' + error.message);
                 });
         });
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => alert('Telefone copiado: ' + text))
-                .catch(err => console.error('Erro ao copiar: ', err));
-        }
-
-        function showTab(tabId) {
-            // Esconde todas as abas
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-
-            // Marca a aba como ativa
-            const activeTab = document.querySelector(`.tab-content#${tabId}`);
-            activeTab.classList.add('active');
-
-            // Altera a aparência das abas
-            const tabElements = document.querySelectorAll('.tab');
-            tabElements.forEach(tab => tab.classList.remove('active'));
-            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
-        }
-
-        function searchFacebook(socioName) {
-            const url = `https://www.facebook.com/search/top/?q=${encodeURIComponent(socioName)}`;
-            window.open(url, '_blank');
-        }
     </script>
 </body>
 </html>
