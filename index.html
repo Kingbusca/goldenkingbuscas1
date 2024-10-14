@@ -194,6 +194,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta de CPF</title>
+    <style>
+        /* Estilos básicos para melhorar a aparência */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #resultado {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>Consulta de CPF</h1>
@@ -206,6 +219,8 @@
         <p>Nome: <span id="nome"></span></p>
         <p>Nascimento: <span id="nascimento"></span></p>
         <p>Renda: <span id="renda"></span></p>
+        <p>Estado Civil: <span id="estadoCivil"></span></p>
+        <p>Poder Aquisitivo: <span id="poderAquisitivo"></span></p>
         <h3>Endereço:</h3>
         <p id="endereco"></p>
         
@@ -230,74 +245,230 @@
         });
 
         function mostrarResultados(data) {
-            // Limpar os resultados anteriores
-            document.getElementById('resultado').innerHTML = '';
-
             // Mostrar CPF
-            const cpfElement = document.createElement('p');
-            cpfElement.innerHTML = `CPF: <span id="cpf">${data.CPF}</span>`;
-            document.getElementById('resultado').appendChild(cpfElement);
+            document.getElementById('cpf').textContent = data.CPF;
 
-            // Exibir dados do Nome
-            const nomeElement = document.createElement('p');
-            nomeElement.innerHTML = `Nome: <span id="nome">${data.NOME}</span>`;
-            document.getElementById('resultado').appendChild(nomeElement);
+            // Exibir Nome
+            document.getElementById('nome').textContent = data.NOME;
 
             // Exibir Nascimento
-            const nascimentoElement = document.createElement('p');
-            nascimentoElement.innerHTML = `Nascimento: <span id="nascimento">${data.NASCIMENTO}</span>`;
-            document.getElementById('resultado').appendChild(nascimentoElement);
+            document.getElementById('nascimento').textContent = data.NASCIMENTO;
 
             // Exibir Renda
-            const rendaElement = document.createElement('p');
-            rendaElement.innerHTML = `Renda: <span id="renda">${data.RENDA}</span>`;
-            document.getElementById('resultado').appendChild(rendaElement);
+            document.getElementById('renda').textContent = data.RENDA;
+
+            // Exibir Estado Civil
+            document.getElementById('estadoCivil').textContent = data.ESTADO_CIVIL || 'SEM INFORMAÇÃO';
+
+            // Exibir Poder Aquisitivo
+            document.getElementById('poderAquisitivo').textContent = data.PODER_AQUISITIVO;
 
             // Exibir Endereço
             if (data.ENDERECO.length > 0) {
                 const endereco = data.ENDERECO[0];
-                const enderecoElement = document.createElement('p');
-                enderecoElement.innerHTML = `Endereço: ${endereco.LOGRADOURO} ${endereco.LOGRADOURO_NUMERO}, ${endereco.COMPLEMENTO}, ${endereco.BAIRRO}, ${endereco.CIDADE} - ${endereco.UF}, CEP: ${endereco.CEP}`;
-                document.getElementById('resultado').appendChild(enderecoElement);
+                document.getElementById('endereco').innerHTML = 
+                    `${endereco.LOGRADOURO} ${endereco.LOGRADOURO_NUMERO}, ${endereco.COMPLEMENTO}, ${endereco.BAIRRO}, ${endereco.CIDADE} - ${endereco.UF}, CEP: ${endereco.CEP}`;
+            } else {
+                document.getElementById('endereco').textContent = 'SEM INFORMAÇÃO';
             }
 
             // Exibir Emails
-            if (data.EMAIL.length > 0) {
-                const emailList = document.createElement('ul');
-                data.EMAIL.forEach(email => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `${email.EMAIL} (Score: ${email.EMAIL_SCORE})`;
-                    emailList.appendChild(li);
-                });
-                document.getElementById('resultado').appendChild(emailList);
-            }
+            const emailList = document.getElementById('emails');
+            emailList.innerHTML = ''; // Limpar emails anteriores
+            data.EMAIL.forEach(email => {
+                const li = document.createElement('li');
+                li.innerHTML = `${email.EMAIL} (Score: ${email.EMAIL_SCORE})`;
+                emailList.appendChild(li);
+            });
 
             // Exibir Telefones
-            if (data.TELEFONES.length > 0) {
-                const telefoneList = document.createElement('ul');
-                data.TELEFONES.forEach(telefone => {
-                    const li = document.createElement('li');
-                    li.textContent = telefone.NUMBER;
-                    telefoneList.appendChild(li);
-                });
-                document.getElementById('resultado').appendChild(telefoneList);
-            }
+            const telefoneList = document.getElementById('telefones');
+            telefoneList.innerHTML = ''; // Limpar telefones anteriores
+            data.TELEFONES.forEach(telefone => {
+                const li = document.createElement('li');
+                li.textContent = telefone.NUMBER;
+                telefoneList.appendChild(li);
+            });
 
             // Exibir Parentes
-            if (data.PARENTES.length > 0) {
-                const parentesList = document.createElement('ul');
-                data.PARENTES.forEach(parente => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `${parente.NOME_VINCULO} (Vínculo: ${parente.VINCULO})`;
-                    parentesList.appendChild(li);
-                });
-                document.getElementById('resultado').appendChild(parentesList);
-            }
+            const parentesList = document.getElementById('parentes');
+            parentesList.innerHTML = ''; // Limpar parentes anteriores
+            data.PARENTES.forEach(parente => {
+                const li = document.createElement('li');
+                li.innerHTML = `${parente.NOME_VINCULO} (Vínculo: ${parente.VINCULO})`;
+                parentesList.appendChild(li);
+            });
         }
     </script>
 </body>
+</html>
 
 
+
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        /* Estilo fixo para o rodapé */
+        #rodape-fixo {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            width: 100%; /* Altera para 100% */
+            background-color: #bdbdbdc7;
+            padding: 10px; /* Ajusta o padding */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        #rodape-fixo div {
+            display: relative;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #rodape-fixo input, #rodape-fixo button {
+            margin: 5px 0; /* Aumenta o espaço entre elementos */
+            width: 90%; /* Ajusta a largura para caber melhor */
+        }
+        #formulario {
+            margin-top: 10px;
+            display: relative;
+        }
+        #cronometro {
+            display: none;
+            font-size: 1.2em; /* Tamanho de fonte relativo */
+            margin-top: 10px;
+        }
+        #botaoRedirecionar {
+            display: none; 
+            margin-top: 10px;
+        }
+        #token {
+            display: none;
+            font-size: 1em; /* Tamanho de fonte relativo */
+            margin-top: 1px;
+            color: green;
+        }
+        #mensagem {
+            color: red;
+            font-size: 0.8em; /* Tamanho de fonte relativo */
+            margin-top: 0px;
+            display: none;
+        }
+        button:disabled {
+            background-color: gray;
+            color: white;
+        }
+        button:enabled {
+            background-color: green;
+            color: white;
+        }
+
+        /* Consultas de mídia para responsividade */
+        @media (max-width: 600px) {
+            #rodape-fixo h1 {
+                font-size: 1.2em; /* Ajusta o tamanho do título em telas pequenas */
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="5" />
+    <!-- Conteúdo fixo no rodapé -->
+    <div id="rodape-fixo">
+        <h1>🐾GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS🐾</h1>
+        <div>
+            <input type="text" id="nome" placeholder="Nome" required>
+            <input type="text" id="whatsapp" placeholder="Número de WhatsApp" required pattern="^9\d{8}$" title="O número deve começar com 9 e ter exatamente 11 dígitos.">
+            <button id="gerarToken" onclick="gerarToken()">Gerar Token🐾</button>
+        </div>
+        <div id="token"></div>
+        <div id="mensagem">FAÇA SUA CONSULTA GRÁTIS ANTES QUE O TOKEN EXPIRE</div>
+        <div id="cronometro"></div>
+        <button id="botaoRedirecionar" onclick="window.location.href='https://logingoldenkingbuscas.netlify.app/'">🐾VER PLANOS KING GOLDEN 🐾</button>
+    </div>
+
+    <script>
+        const tempoLimite = 60 * 1000;
+        let tokenGerado = false;
+        const numerosGerados = JSON.parse(localStorage.getItem('numerosGerados')) || {};
+
+        document.getElementById('consultar').disabled = true;
+
+        function gerarToken() {
+            const whatsapp = document.getElementById('whatsapp').value;
+            const nome = document.getElementById('nome').value;
+
+            if (!nome || !whatsapp) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            const agora = new Date().getTime();
+            if (numerosGerados[whatsapp] && (agora - numerosGerados[whatsapp].timestamp < 48 * 60 * 60 * 1000)) {
+                alert("Este número já gerou um token nas últimas 48 horas.");
+                return;
+            }
+
+            if (whatsapp.startsWith('3') || whatsapp[2] !== '9' || whatsapp.length !== 11) {
+                alert("Número inválido. O número não pode começar com 3, o terceiro dígito deve ser 9 e deve conter exatamente 11 dígitos.");
+                return;
+            }
+
+            const token = `id-${Math.floor(Math.random() * 1000)}`;
+            document.getElementById('token').innerText = `Seu token: ${token}`;
+            document.getElementById('token').style.display = 'block';
+
+            document.getElementById('mensagem').style.display = 'block';
+
+            startCronometro();
+
+            document.getElementById('consultar').disabled = false;
+
+            numerosGerados[whatsapp] = { timestamp: agora };
+            localStorage.setItem('numerosGerados', JSON.stringify(numerosGerados));
+        }
+
+        function startCronometro() {
+            let tempoRestante = tempoLimite;
+            const cronometroElement = document.getElementById('cronometro');
+            cronometroElement.style.display = 'block';
+
+            const intervalo = setInterval(() => {
+                if (tempoRestante <= 0) {
+                    clearInterval(intervalo);
+                    cronometroElement.innerText = "O tempo para uso do token expirou.";
+                    document.getElementById('botaoRedirecionar').style.display = 'block';
+                    document.getElementById('consultar').disabled = true;
+                    return;
+                }
+
+                const segundos = Math.floor((tempoRestante / 1000) % 60);
+                cronometroElement.innerText = `Tempo restante: ${segundos}s`;
+                tempoRestante -= 1000;
+            }, 1000);
+        }
+
+        document.querySelectorAll('#nome, #whatsapp').forEach(input => {
+            input.addEventListener('input', () => {
+                const nomePreenchido = document.getElementById('nome').value.trim() !== '';
+                const whatsappPreenchido = document.getElementById('whatsapp').value.trim() !== '' && document.getElementById('whatsapp').value.length === 11;
+                document.getElementById('gerarToken').disabled = !(nomePreenchido && whatsappPreenchido);
+            });
+        });
+    </script>
+</body>
 <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="10" />
 <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="30" />
 <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="15" />
