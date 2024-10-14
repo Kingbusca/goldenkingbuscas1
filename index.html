@@ -238,7 +238,7 @@
         document.getElementById('consultarBtn').addEventListener('click', () => {
             const cpf = document.getElementById('cpfInput').value;
 
-            fetch(`URL_DA_API/${cpf}`) // Substitua URL_DA_API pela URL real da sua API
+            fetch(`/consulta-cpf/${cpf}`) // Substitua URL_DA_API pela URL real da sua API
                 .then(response => response.json())
                 .then(data => mostrarResultados(data))
                 .catch(error => console.error('Erro ao buscar dados:', error));
