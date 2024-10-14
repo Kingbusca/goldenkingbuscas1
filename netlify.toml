@@ -5,7 +5,7 @@
   force = true
 [[redirects]]
   from = "/consulta-cpf/*"
-  to = "https://ghostapis.com.br/api.php?token=0698fa08ba2b65586e8a9b2672a70bfe&cpf=:splat"
+  to = "https://ghostapis.com.br/api.php?token=9fef76f34c1c0cf627a6f9d67941b5ef&cpf=:splat"
   status = 200
   force = true
 [consulta_cpf]
