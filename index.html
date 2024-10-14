@@ -1,271 +1,92 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta CNPJ e CPF</title>
+    <title>Consulta de CPF e CNPJ</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            margin: 20px;
         }
-        h1 {
-            color: rgb(155, 0, 0);
-            text-align: center;
-        }
-        .container {
-            background-color: #000000;
-            padding: 20px;
-            border: 1px solid #ff0303;
-            border-radius: 4px;
-            margin: 20px auto;
-            max-width: 300px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        input {
+            margin: 5px 0;
         }
         button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
             margin-top: 10px;
         }
-        button:hover {
-            background-color: #0056b3; /* Azul mais escuro */
-        }
         .resultado {
-            display: none; /* Inicialmente escondido */
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro */
-            color: white;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .modal-content {
-            background-color: #fff;
-            color: black;
-            border-radius: 8px;
-            padding: 20px;
-            max-width: 600px;
-            margin: 100px auto; /* Centraliza verticalmente */
-            position: relative;
-        }
-        .fechar {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            border: none;
-            background: none;
-            color: black;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .socio {
-            margin: 10px 0;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
-    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="10" />
-    <h1>🐾GOLDEN KING BUSCA🐾</h1>
 
-    <div class="container">
-        <h2>🔍CONSULTA CNPJ🔍</h2>
-        <input type="text" id="cnpj" placeholder="Digite o CNPJ" />
-        <button id="consultarCNPJ">Consultar🐾</button>
-        <div class="resultado" id="modalResultadoCNPJ">
-            <div class="modal-content">
-                <button class="fechar" id="fecharModalCNPJ">&times;</button>
-                <h2>🔍 Resultados da Consulta CNPJ 🔍</h2>
-                <div id="resultadoDadosCNPJ"></div>
-            </div>
-        </div>
-    </div>
+    <h1>Consulta de CPF e CNPJ</h1>
 
-    <div class="container">
-        <h2>🔍CONSULTA CPF🔍</h2>
-        <input type="text" id="cpfInput" placeholder="Digite o CPF" />
-        <button id="consultarCPF">Consultar🐾</button>
-        <div id="resultadoCPF">
-            <h2>Resultados:</h2>
-            <p>CPF: <span id="cpf"></span></p>
-            <p>Nome: <span id="nome"></span></p>
-            <p>Nascimento: <span id="nascimento"></span></p>
-            <p>Renda: <span id="renda"></span></p>
-            <p>Estado Civil: <span id="estadoCivil"></span></p>
-            <p>Poder Aquisitivo: <span id="poderAquisitivo"></span></p>
-            <h3>Endereço:</h3>
-            <p id="endereco"></p>
+    <h2>Consulta de CPF</h2>
+    <input type="text" id="inputCPF" placeholder="Digite o CPF" maxlength="14">
+    <button id="consultarCPF">Consultar CPF</button>
 
-            <h3>Emails:</h3>
-            <ul id="emails"></ul>
+    <h2>Consulta de CNPJ</h2>
+    <input type="text" id="inputCNPJ" placeholder="Digite o CNPJ" maxlength="18">
+    <button id="consultarCNPJ">Consultar CNPJ</button>
 
-            <h3>Telefones:</h3>
-            <ul id="telefones"></ul>
-
-            <h3>Parentes:</h3>
-            <ul id="parentes"></ul>
-        </div>
-    </div>
+    <div id="resultado" class="resultado"></div>
 
     <script>
-        // Função para consulta de CNPJ
-        document.getElementById('consultarCNPJ').addEventListener('click', function() {
-            let cnpj = document.getElementById('cnpj').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
-            
-            // Verifica se o CNPJ está vazio ou tem tamanho incorreto
-            if (cnpj === "" || cnpj.length !== 14) {
-                alert("Por favor, insira um CNPJ válido com 14 dígitos.");
+        // Função para consultar CPF
+        document.getElementById('consultarCPF').addEventListener('click', () => {
+            const cpf = document.getElementById('inputCPF').value.replace(/\D/g, '');
+            if (cpf.length !== 11) {
+                alert('Por favor, insira um CPF válido com 11 dígitos.');
                 return;
             }
 
-            // Faz a requisição para o proxy configurado no Netlify
-            fetch(`/consulta/${cnpj}`)
+            fetch(`/consulta-cpf/${cpf}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Erro ao buscar o CNPJ. Verifique o número e tente novamente.');
+                        throw new Error('Erro na resposta da API: ' + response.statusText);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    // Prepara os resultados para exibição
-                    let resultadoHTML = `
-                        <div>📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
-                        <div>🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
-                        <div>📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
-                        <div>☎️ <strong>Telefone:</strong> ${data.telefone || 'N/A'} <button onclick="copiarTexto('${data.telefone}')">🗒️ Copiar</button></div>
-                        <div>📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
-                        <div>📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
-                        <div>🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
-                        <div>🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}</div>
-                        <div>🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
-                        <div>📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
-                        <div>🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
-                    `;
-
-                    // Adiciona sócios se existirem
-                    if (data.qsa) {
-                        resultadoHTML += `<div><strong>👥 Sócios:</strong><br>`;
-                        data.qsa.forEach((socio) => {
-                            resultadoHTML += `
-                                <div class="socio">
-                                    ${socio.nome} - ${socio.qual} 
-                                    <button onclick="pesquisarFacebook('${socio.nome}')">🔍 Pesquisar no Facebook</button>
-                                </div>
-                            `;
-                        });
-                        resultadoHTML += `</div>`;
-                    }
-
-                    document.getElementById('resultadoDadosCNPJ').innerHTML = resultadoHTML;
-
-                    // Mostra a janela modal
-                    document.getElementById('modalResultadoCNPJ').style.display = 'block';
+                    console.log(data); // Verifique a estrutura dos dados
+                    document.getElementById('resultado').innerHTML = JSON.stringify(data, null, 2);
                 })
                 .catch(error => {
-                    console.error('Erro:', error);
-                    alert(error.message);
+                    console.error('Erro ao fazer a consulta de CPF:', error);
+                    alert('Não foi possível realizar a consulta de CPF. Por favor, tente novamente mais tarde.');
                 });
         });
 
-        // Função para consulta de CPF
-        document.getElementById('consultarCPF').addEventListener('click', () => {
-            const cpf = document.getElementById('cpfInput').value.trim(); // Remove espaços
+        // Função para consultar CNPJ
+        document.getElementById('consultarCNPJ').addEventListener('click', () => {
+            const cnpj = document.getElementById('inputCNPJ').value.replace(/\D/g, '');
+            if (cnpj.length !== 14) {
+                alert('Por favor, insira um CNPJ válido com 14 dígitos.');
+                return;
+            }
 
-            fetch(`/consulta-cpf/${cpf}`) // Substitua URL_DA_API pela URL real da sua API
-                .then(response => response.json())
-                .then(data => mostrarResultados(data))
-                .catch(error => console.error('Erro ao buscar dados:', error));
+            fetch(`/consulta-cnpj/${cnpj}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na resposta da API: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // Verifique a estrutura dos dados
+                    document.getElementById('resultado').innerHTML = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Erro ao fazer a consulta de CNPJ:', error);
+                    alert('Não foi possível realizar a consulta de CNPJ. Por favor, tente novamente mais tarde.');
+                });
         });
-
-        function mostrarResultados(data) {
-            // Mostrar CPF
-            document.getElementById('cpf').textContent = data.CPF;
-
-            // Exibir Nome
-            document.getElementById('nome').textContent = data.NOME;
-
-            // Exibir Nascimento
-            document.getElementById('nascimento').textContent = data.NASCIMENTO;
-
-            // Exibir Renda
-            document.getElementById('renda').textContent = data.RENDA;
-
-            // Exibir Estado Civil
-            document.getElementById('estadoCivil').textContent = data.ESTADO_CIVIL || 'SEM INFORMAÇÃO';
-
-            // Exibir Poder Aquisitivo
-            document.getElementById('poderAquisitivo').textContent = data.PODER_AQUISITIVO || 'SEM INFORMAÇÃO';
-
-            // Exibir Endereço
-            document.getElementById('endereco').textContent = `${data.ENDERECO}, ${data.NUMERO}, ${data.BAIRRO}, ${data.CIDADE}, ${data.UF}`;
-
-            // Exibir Emails
-            const emailsList = document.getElementById('emails');
-            emailsList.innerHTML = ''; // Limpar emails anteriores
-            if (data.EMAIL) {
-                data.EMAIL.forEach(email => {
-                    const li = document.createElement('li');
-                    li.textContent = email;
-                    emailsList.appendChild(li);
-                });
-            } else {
-                emailsList.innerHTML = '<li>Nenhum email encontrado</li>';
-            }
-
-            // Exibir Telefones
-            const telefonesList = document.getElementById('telefones');
-            telefonesList.innerHTML = ''; // Limpar telefones anteriores
-            if (data.TELEFONE) {
-                data.TELEFONE.forEach(telefone => {
-                    const li = document.createElement('li');
-                    li.textContent = telefone;
-                    telefonesList.appendChild(li);
-                });
-            } else {
-                telefonesList.innerHTML = '<li>Nenhum telefone encontrado</li>';
-            }
-
-            // Exibir Parentes
-            const parentesList = document.getElementById('parentes');
-            parentesList.innerHTML = ''; // Limpar parentes anteriores
-            if (data.PARENTES) {
-                data.PARENTES.forEach(parente => {
-                    const li = document.createElement('li');
-                    li.textContent = parente.NOME;
-                    parentesList.appendChild(li);
-                });
-            } else {
-                parentesList.innerHTML = '<li>Nenhum parente encontrado</li>';
-            }
-        }
-
-        // Função para fechar o modal de CNPJ
-        document.getElementById('fecharModalCNPJ').addEventListener('click', () => {
-            document.getElementById('modalResultadoCNPJ').style.display = 'none';
-        });
-
-        // Função para copiar texto
-        function copiarTexto(texto) {
-            navigator.clipboard.writeText(texto).then(() => {
-                alert('Texto copiado: ' + texto);
-            }).catch(err => {
-                console.error('Erro ao copiar: ', err);
-            });
-        }
-
-        // Função para pesquisar no Facebook
-        function pesquisarFacebook(nome) {
-            const url = `https://www.facebook.com/search/top/?q=${encodeURIComponent(nome)}`;
-            window.open(url, '_blank');
-        }
     </script>
+
 </body>
 </html>
