@@ -166,19 +166,34 @@
                             return response.json();
                         })
                         .then(data => {
-                            let resultadoHTML = \`
-                                <div class="campo">📜 <strong>Razão Social:</strong> \${data.nome || 'N/A'}</div>
-                                <div class="campo">🏢 <strong>Nome Fantasia:</strong> \${data.fantasia || 'N/A'}</div>
-                                <div class="campo">📍 <strong>Endereço:</strong> \${data.logradouro || 'N/A'}, \${data.numero || 'N/A'}, \${data.bairro || 'N/A'}, \${data.municipio || 'N/A'}, \${data.uf || 'N/A'}</div>
-                                <div class="campo">☎️ <strong>Telefone:</strong> \${data.telefone ? data.telefone.split(',').map(tel => \`\${tel.trim()} <button class='socio-button' onclick='copyToClipboard(\'' + tel.trim() + '\')'>Facebook</button>\`).join('<br>') : 'N/A'}</div>
-                                <div class="campo">📧 <strong>Email:</strong> \${data.email || 'N/A'}</div>
-                                <div class="campo">📅 <strong>Data de Abertura:</strong> \${data.abertura || 'N/A'}</div>
-                                <div class="campo">🔍 <strong>Situação:</strong> \${data.situacao || 'N/A'}</div>
-                                <div class="campo">🔒 <strong>Capital Social:</strong> R$ \${data.capital_social || 'N/A'}</div>
-                                <div class="campo">🏛️ <strong>Tipo:</strong> \${data.tipo || 'N/A'}</div>
-                                <div class="campo">📆 <strong>Data da Situação:</strong> \${data.data_situacao || 'N/A'}</div>
-                                <div class="campo">🔄 <strong>Última Atualização:</strong> \${data.ultima_atualizacao || 'N/A'}</div>
-                                <div class="campo">👥 <strong>Quadro Societário:</strong> \${data.socios ? data.socios.map((socio, index) => \`<div>⚙️ \${socio.nome} <button class='socio-button' onclick='copyToClipboard(\'' + socio.nome + '\')'>Facebook</button></div>\`).join('') : 'N/A'}</div>
+                             let resultadoHTML = `
+                        <div class="tabs">
+                            <div class="tab active" onclick="showTab('info')">Informações</div>
+                            <div class="tab" onclick="showTab('socios')">Sócios</div>
+                        </div>
+                        <div class="tab-content active" id="info">
+                            <div class="campo">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
+                            <div class="campo">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
+                            <div class="campo">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
+                            <div class="campo">☎️ <strong>Telefone:</strong> ${data.telefone ? data.telefone.split(',').map(tel => `${tel.trim()} <button onclick="copyToClipboard('${tel.trim()}')">Copiar</button>`).join('<br>') : 'N/A'}</div>
+                            <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
+                            <div class="campo">📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
+                            <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
+                            <div class="campo">🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}</div>
+                            <div class="campo">🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
+                            <div class="campo">📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
+                            <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
+                        </div>
+                        <div class="tab-content" id="socios">
+                            <div class="socios">
+                                <strong>👥 Sócios:</strong><br>
+                                ${data.qsa.map(socio => `
+                                    <div>${socio.nome} - ${socio.qualificacao} 
+                                    <button class="socio-button" onclick="copyToClipboard('${socio.nome}')">Copiar Nome</button>
+                                    </div>
+                                `).join('') || 'N/A'}
+                            </div>
+                        </div>
                             \`;
                             document.getElementById('resultado').innerHTML = resultadoHTML;
                         })
