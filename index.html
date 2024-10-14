@@ -67,6 +67,9 @@
             font-size: 20px;
             cursor: pointer;
         }
+        .socio {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -110,7 +113,7 @@
                         <div>📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
                         <div>🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
                         <div>📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
-                        <div>☎️ <strong>Telefone:</strong> ${data.telefone || 'N/A'}</div>
+                        <div>☎️ <strong>Telefone:</strong> ${data.telefone || 'N/A'} <button onclick="copiarTexto('${data.telefone}')">🗒️ Copiar</button></div>
                         <div>📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
                         <div>📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
                         <div>🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
@@ -122,7 +125,16 @@
 
                     // Adiciona sócios se existirem
                     if (data.qsa) {
-                        resultadoHTML += `<div><strong>👥 Sócios:</strong><br>${data.qsa.map(socio => `${socio.nome} - ${socio.qual}`).join('<br>')}</div>`;
+                        resultadoHTML += `<div><strong>👥 Sócios:</strong><br>`;
+                        data.qsa.forEach((socio) => {
+                            resultadoHTML += `
+                                <div class="socio">
+                                    ${socio.nome} - ${socio.qual} 
+                                    <button onclick="pesquisarFacebook('${socio.nome}')">🔍 Pesquisar no Facebook</button>
+                                </div>
+                            `;
+                        });
+                        resultadoHTML += `</div>`;
                     }
 
                     document.getElementById('resultadoDados').innerHTML = resultadoHTML;
@@ -135,6 +147,21 @@
                     alert(error.message);
                 });
         });
+
+        // Função para copiar texto para a área de transferência
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('Número de telefone copiado: ' + texto);
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
+
+        // Função para pesquisar sócio no Facebook
+        function pesquisarFacebook(nomeSocio) {
+            const url = `https://www.facebook.com/search/top?q=${encodeURIComponent(nomeSocio)}`;
+            window.open(url, '_blank');
+        }
 
         // Fechar modal ao clicar no botão
         document.getElementById('fecharModal').addEventListener('click', function() {
