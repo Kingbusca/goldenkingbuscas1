@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta CNPJ</title>
+    <title>Consulta CNPJ e CPF</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -74,30 +74,50 @@
 </head>
 <body>
     <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="10" />
-<img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="30" />
-<img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="15" />
     <h1>🐾GOLDEN KING BUSCA🐾</h1>
-    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="5" />
 
     <div class="container">
         <h2>🔍CONSULTA CNPJ🔍</h2>
-        <h2> <span style="color: rgb(12, 255, 52);">On</span></p>
         <input type="text" id="cnpj" placeholder="Digite o CNPJ" />
-        <button id="consultar">Consultar🐾</button>
-        <div class="resultado" id="resultado"></div>
+        <button id="consultarCNPJ">Consultar🐾</button>
+        <div class="resultado" id="modalResultadoCNPJ">
+            <div class="modal-content">
+                <button class="fechar" id="fecharModalCNPJ">&times;</button>
+                <h2>🔍 Resultados da Consulta CNPJ 🔍</h2>
+                <div id="resultadoDadosCNPJ"></div>
+            </div>
+        </div>
     </div>
-    
-    <div class="resultado" id="modalResultado">
-        <div class="modal-content">
-            <button class="fechar" id="fecharModal">&times;</button>
-            <h2>🔍 Resultados da Consulta 🔍</h2>
-            <div id="resultadoDados"></div>
-            
+
+    <div class="container">
+        <h2>🔍CONSULTA CPF🔍</h2>
+        <input type="text" id="cpfInput" placeholder="Digite o CPF" />
+        <button id="consultarCPF">Consultar🐾</button>
+        <div id="resultadoCPF">
+            <h2>Resultados:</h2>
+            <p>CPF: <span id="cpf"></span></p>
+            <p>Nome: <span id="nome"></span></p>
+            <p>Nascimento: <span id="nascimento"></span></p>
+            <p>Renda: <span id="renda"></span></p>
+            <p>Estado Civil: <span id="estadoCivil"></span></p>
+            <p>Poder Aquisitivo: <span id="poderAquisitivo"></span></p>
+            <h3>Endereço:</h3>
+            <p id="endereco"></p>
+
+            <h3>Emails:</h3>
+            <ul id="emails"></ul>
+
+            <h3>Telefones:</h3>
+            <ul id="telefones"></ul>
+
+            <h3>Parentes:</h3>
+            <ul id="parentes"></ul>
         </div>
     </div>
 
     <script>
-        document.getElementById('consultar').addEventListener('click', function() {
+        // Função para consulta de CNPJ
+        document.getElementById('consultarCNPJ').addEventListener('click', function() {
             let cnpj = document.getElementById('cnpj').value.trim().replace(/\D/g, ''); // Remove caracteres não numéricos
             
             // Verifica se o CNPJ está vazio ou tem tamanho incorreto
@@ -144,10 +164,10 @@
                         resultadoHTML += `</div>`;
                     }
 
-                    document.getElementById('resultadoDados').innerHTML = resultadoHTML;
+                    document.getElementById('resultadoDadosCNPJ').innerHTML = resultadoHTML;
 
                     // Mostra a janela modal
-                    document.getElementById('modalResultado').style.display = 'block';
+                    document.getElementById('modalResultadoCNPJ').style.display = 'block';
                 })
                 .catch(error => {
                     console.error('Erro:', error);
@@ -155,88 +175,9 @@
                 });
         });
 
-        // Função para copiar texto para a área de transferência
-        function copiarTexto(texto) {
-            navigator.clipboard.writeText(texto).then(() => {
-                alert('Número de telefone copiado: ' + texto);
-            }).catch(err => {
-                console.error('Erro ao copiar: ', err);
-            });
-        }
-
-        // Função para pesquisar sócio no Facebook
-        function pesquisarFacebook(nomeSocio) {
-            const url = `https://www.facebook.com/search/top?q=${encodeURIComponent(nomeSocio)}`;
-            window.open(url, '_blank');
-        }
-
-        // Fechar modal ao clicar no botão
-        document.getElementById('fecharModal').addEventListener('click', function() {
-            document.getElementById('modalResultado').style.display = 'none';
-        });
-
-        // Fechar modal ao clicar fora da área do modal
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('modalResultado');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    </script>
-</body>
-</html>
-
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de CPF</title>
-    <style>
-        /* Estilos básicos para melhorar a aparência */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #resultado {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Consulta de CPF</h1>
-    <input type="text" id="cpfInput" placeholder="Digite o CPF" />
-    <button id="consultarBtn">Consultar</button>
-
-    <div id="resultado">
-        <h2>Resultados:</h2>
-        <p>CPF: <span id="cpf"></span></p>
-        <p>Nome: <span id="nome"></span></p>
-        <p>Nascimento: <span id="nascimento"></span></p>
-        <p>Renda: <span id="renda"></span></p>
-        <p>Estado Civil: <span id="estadoCivil"></span></p>
-        <p>Poder Aquisitivo: <span id="poderAquisitivo"></span></p>
-        <h3>Endereço:</h3>
-        <p id="endereco"></p>
-        
-        <h3>Emails:</h3>
-        <ul id="emails"></ul>
-
-        <h3>Telefones:</h3>
-        <ul id="telefones"></ul>
-
-        <h3>Parentes:</h3>
-        <ul id="parentes"></ul>
-    </div>
-
-    <script>
-        document.getElementById('consultarBtn').addEventListener('click', () => {
-            const cpf = document.getElementById('cpfInput').value;
+        // Função para consulta de CPF
+        document.getElementById('consultarCPF').addEventListener('click', () => {
+            const cpf = document.getElementById('cpfInput').value.trim(); // Remove espaços
 
             fetch(`/consulta-cpf/${cpf}`) // Substitua URL_DA_API pela URL real da sua API
                 .then(response => response.json())
@@ -261,214 +202,70 @@
             document.getElementById('estadoCivil').textContent = data.ESTADO_CIVIL || 'SEM INFORMAÇÃO';
 
             // Exibir Poder Aquisitivo
-            document.getElementById('poderAquisitivo').textContent = data.PODER_AQUISITIVO;
+            document.getElementById('poderAquisitivo').textContent = data.PODER_AQUISITIVO || 'SEM INFORMAÇÃO';
 
             // Exibir Endereço
-            if (data.ENDERECO.length > 0) {
-                const endereco = data.ENDERECO[0];
-                document.getElementById('endereco').innerHTML = 
-                    `${endereco.LOGRADOURO} ${endereco.LOGRADOURO_NUMERO}, ${endereco.COMPLEMENTO}, ${endereco.BAIRRO}, ${endereco.CIDADE} - ${endereco.UF}, CEP: ${endereco.CEP}`;
-            } else {
-                document.getElementById('endereco').textContent = 'SEM INFORMAÇÃO';
-            }
+            document.getElementById('endereco').textContent = `${data.ENDERECO}, ${data.NUMERO}, ${data.BAIRRO}, ${data.CIDADE}, ${data.UF}`;
 
             // Exibir Emails
-            const emailList = document.getElementById('emails');
-            emailList.innerHTML = ''; // Limpar emails anteriores
-            data.EMAIL.forEach(email => {
-                const li = document.createElement('li');
-                li.innerHTML = `${email.EMAIL} (Score: ${email.EMAIL_SCORE})`;
-                emailList.appendChild(li);
-            });
+            const emailsList = document.getElementById('emails');
+            emailsList.innerHTML = ''; // Limpar emails anteriores
+            if (data.EMAIL) {
+                data.EMAIL.forEach(email => {
+                    const li = document.createElement('li');
+                    li.textContent = email;
+                    emailsList.appendChild(li);
+                });
+            } else {
+                emailsList.innerHTML = '<li>Nenhum email encontrado</li>';
+            }
 
             // Exibir Telefones
-            const telefoneList = document.getElementById('telefones');
-            telefoneList.innerHTML = ''; // Limpar telefones anteriores
-            data.TELEFONES.forEach(telefone => {
-                const li = document.createElement('li');
-                li.textContent = telefone.NUMBER;
-                telefoneList.appendChild(li);
-            });
+            const telefonesList = document.getElementById('telefones');
+            telefonesList.innerHTML = ''; // Limpar telefones anteriores
+            if (data.TELEFONE) {
+                data.TELEFONE.forEach(telefone => {
+                    const li = document.createElement('li');
+                    li.textContent = telefone;
+                    telefonesList.appendChild(li);
+                });
+            } else {
+                telefonesList.innerHTML = '<li>Nenhum telefone encontrado</li>';
+            }
 
             // Exibir Parentes
             const parentesList = document.getElementById('parentes');
             parentesList.innerHTML = ''; // Limpar parentes anteriores
-            data.PARENTES.forEach(parente => {
-                const li = document.createElement('li');
-                li.innerHTML = `${parente.NOME_VINCULO} (Vínculo: ${parente.VINCULO})`;
-                parentesList.appendChild(li);
-            });
-        }
-    </script>
-</body>
-</html>
-
-
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        /* Estilo fixo para o rodapé */
-        #rodape-fixo {
-            position: relative;
-            bottom: 0;
-            left: 0;
-            width: 100%; /* Altera para 100% */
-            background-color: #bdbdbdc7;
-            padding: 10px; /* Ajusta o padding */
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-        #rodape-fixo div {
-            display: relative;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        #rodape-fixo input, #rodape-fixo button {
-            margin: 5px 0; /* Aumenta o espaço entre elementos */
-            width: 90%; /* Ajusta a largura para caber melhor */
-        }
-        #formulario {
-            margin-top: 10px;
-            display: relative;
-        }
-        #cronometro {
-            display: none;
-            font-size: 1.2em; /* Tamanho de fonte relativo */
-            margin-top: 10px;
-        }
-        #botaoRedirecionar {
-            display: none; 
-            margin-top: 10px;
-        }
-        #token {
-            display: none;
-            font-size: 1em; /* Tamanho de fonte relativo */
-            margin-top: 1px;
-            color: green;
-        }
-        #mensagem {
-            color: red;
-            font-size: 0.8em; /* Tamanho de fonte relativo */
-            margin-top: 0px;
-            display: none;
-        }
-        button:disabled {
-            background-color: gray;
-            color: white;
-        }
-        button:enabled {
-            background-color: green;
-            color: white;
-        }
-
-        /* Consultas de mídia para responsividade */
-        @media (max-width: 600px) {
-            #rodape-fixo h1 {
-                font-size: 1.2em; /* Ajusta o tamanho do título em telas pequenas */
+            if (data.PARENTES) {
+                data.PARENTES.forEach(parente => {
+                    const li = document.createElement('li');
+                    li.textContent = parente.NOME;
+                    parentesList.appendChild(li);
+                });
+            } else {
+                parentesList.innerHTML = '<li>Nenhum parente encontrado</li>';
             }
         }
-    </style>
-</head>
-<body>
-    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="5" />
-    <!-- Conteúdo fixo no rodapé -->
-    <div id="rodape-fixo">
-        <h1>🐾GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS🐾</h1>
-        <div>
-            <input type="text" id="nome" placeholder="Nome" required>
-            <input type="text" id="whatsapp" placeholder="Número de WhatsApp" required pattern="^9\d{8}$" title="O número deve começar com 9 e ter exatamente 11 dígitos.">
-            <button id="gerarToken" onclick="gerarToken()">Gerar Token🐾</button>
-        </div>
-        <div id="token"></div>
-        <div id="mensagem">FAÇA SUA CONSULTA GRÁTIS ANTES QUE O TOKEN EXPIRE</div>
-        <div id="cronometro"></div>
-        <button id="botaoRedirecionar" onclick="window.location.href='https://logingoldenkingbuscas.netlify.app/'">🐾VER PLANOS KING GOLDEN 🐾</button>
-    </div>
 
-    <script>
-        const tempoLimite = 60 * 1000;
-        let tokenGerado = false;
-        const numerosGerados = JSON.parse(localStorage.getItem('numerosGerados')) || {};
-
-        document.getElementById('consultar').disabled = true;
-
-        function gerarToken() {
-            const whatsapp = document.getElementById('whatsapp').value;
-            const nome = document.getElementById('nome').value;
-
-            if (!nome || !whatsapp) {
-                alert("Por favor, preencha todos os campos.");
-                return;
-            }
-
-            const agora = new Date().getTime();
-            if (numerosGerados[whatsapp] && (agora - numerosGerados[whatsapp].timestamp < 48 * 60 * 60 * 1000)) {
-                alert("Este número já gerou um token nas últimas 48 horas.");
-                return;
-            }
-
-            if (whatsapp.startsWith('3') || whatsapp[2] !== '9' || whatsapp.length !== 11) {
-                alert("Número inválido. O número não pode começar com 3, o terceiro dígito deve ser 9 e deve conter exatamente 11 dígitos.");
-                return;
-            }
-
-            const token = `id-${Math.floor(Math.random() * 1000)}`;
-            document.getElementById('token').innerText = `Seu token: ${token}`;
-            document.getElementById('token').style.display = 'block';
-
-            document.getElementById('mensagem').style.display = 'block';
-
-            startCronometro();
-
-            document.getElementById('consultar').disabled = false;
-
-            numerosGerados[whatsapp] = { timestamp: agora };
-            localStorage.setItem('numerosGerados', JSON.stringify(numerosGerados));
-        }
-
-        function startCronometro() {
-            let tempoRestante = tempoLimite;
-            const cronometroElement = document.getElementById('cronometro');
-            cronometroElement.style.display = 'block';
-
-            const intervalo = setInterval(() => {
-                if (tempoRestante <= 0) {
-                    clearInterval(intervalo);
-                    cronometroElement.innerText = "O tempo para uso do token expirou.";
-                    document.getElementById('botaoRedirecionar').style.display = 'block';
-                    document.getElementById('consultar').disabled = true;
-                    return;
-                }
-
-                const segundos = Math.floor((tempoRestante / 1000) % 60);
-                cronometroElement.innerText = `Tempo restante: ${segundos}s`;
-                tempoRestante -= 1000;
-            }, 1000);
-        }
-
-        document.querySelectorAll('#nome, #whatsapp').forEach(input => {
-            input.addEventListener('input', () => {
-                const nomePreenchido = document.getElementById('nome').value.trim() !== '';
-                const whatsappPreenchido = document.getElementById('whatsapp').value.trim() !== '' && document.getElementById('whatsapp').value.length === 11;
-                document.getElementById('gerarToken').disabled = !(nomePreenchido && whatsappPreenchido);
-            });
+        // Função para fechar o modal de CNPJ
+        document.getElementById('fecharModalCNPJ').addEventListener('click', () => {
+            document.getElementById('modalResultadoCNPJ').style.display = 'none';
         });
+
+        // Função para copiar texto
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('Texto copiado: ' + texto);
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
+
+        // Função para pesquisar no Facebook
+        function pesquisarFacebook(nome) {
+            const url = `https://www.facebook.com/search/top/?q=${encodeURIComponent(nome)}`;
+            window.open(url, '_blank');
+        }
     </script>
 </body>
-<img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="10" />
-<img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="30" />
-<img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="15" />
 </html>
