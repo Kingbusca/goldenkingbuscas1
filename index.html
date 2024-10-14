@@ -189,411 +189,115 @@
 
 
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta CPF</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: rgb(155, 0, 0);
-            text-align: center;
-        }
-        .consulta-container {
-            background-color: #000000;
-            padding: 20px;
-            border: 1px solid #ff0303;
-            border-radius: 4px;
-            margin: 20px auto;
-            max-width: 300px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            color: blue;
-            text-align: center;
-            margin-top: 0;
-        }
-        input[type="text"] {
-            padding: 10px;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #0eee4a;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #0029dd;
-        }
-        .resultado-item {
-            background-color: #e1f5fe;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #0288d1;
-            border-radius: 4px;
-        }
-        .zap-button {
-            background-color: #25d366; /* Cor do WhatsApp */
-            margin-top: 5px;
-            cursor: pointer;
-            padding: 5px 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-        }
-        .facebook-button {
-            background-color: #3b5998; /* Cor do Facebook */
-            margin-top: 5px;
-            cursor: pointer;
-            padding: 5px 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-        }
-        .voltar-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 10px;
-            cursor: pointer;
-        }
-        .resultado-item strong {
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="5" />
-    <div class="consulta-container">
-        <h2>🔍CONSULTA CPF TRACKER🤵‍♀️</h2>
-        <h2> <span style="color: rgb(255, 12, 12);">Off</span></p>
-        <input type="text" id="cpfInput" placeholder="Digite o CPF" maxlength="11">
-        <button id="consultarBtn">Consultar🐾</button>
-    </div>
-
-    <script>
-        document.getElementById('consultarBtn').addEventListener('click', consultaCPF);
-
-        async function consultaCPF() {
-            const cpf = document.getElementById('cpfInput').value.trim();
-            if (!cpf) {
-                alert('Por favor, insira um CPF válido.');
-                return;
-            }
-
-            try {
-                const url = `/consulta-cpf/${cpf}`;
-                
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Erro: ${response.status} ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                abrirResultadosEmNovaAba(data);
-            } catch (error) {
-                console.error('Erro ao fazer a consulta:', error);
-                alert(`Erro ao consultar CPF: ${error.message}`);
-            }
-        }
-
-        function abrirResultadosEmNovaAba(data) {
-            const novaAba = window.open("", "_blank");
-            novaAba.document.write(`
-                <html lang="pt-br">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Resultados da Consulta</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            margin: 0;
-                            padding: 20px;
-                            background-color: #f4f4f4;
-                        }
-                        h2 {
-                            color: blue;
-                        }
-                        .resultado-item {
-                            background-color: #e1f5fe;
-                            padding: 10px;
-                            margin: 10px 0;
-                            border: 1px solid #0288d1;
-                            border-radius: 4px;
-                        }
-                        .zap-button {
-                            background-color: #25d366;
-                            margin-top: 5px;
-                            cursor: pointer;
-                            padding: 5px 10px;
-                            color: white;
-                            border: none;
-                            border-radius: 4px;
-                        }
-                        .facebook-button {
-                            background-color: #3b5998; /* Cor do Facebook */
-                            margin-top: 5px;
-                            cursor: pointer;
-                            padding: 5px 10px;
-                            color: white;
-                            border: none;
-                            border-radius: 4px;
-                        }
-                        .resultado-item strong {
-                            font-weight: bold;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <button class="voltar-btn" onclick="window.close()">Voltar</button>
-                    <h2>Resultados da Consulta</h2>
-                    <div class="resultado-item"><strong>👤 Nome:</strong> ${data.resultado.civil_name || 'N/A'} <button class="facebook-button" onclick="pesquisarFacebook('${data.resultado.civil_name || ''}')">Facebook</button></div>
-                    <div class="resultado-item"><strong>🔢 CPF:</strong> ${data.resultado.cpf_cnpj || 'N/A'}</div>
-                    <div class="resultado-item"><strong>🎂 Data de Nascimento:</strong> ${data.resultado.birth_date || 'N/A'}</div>
-                    <div class="resultado-item"><strong>👩‍👧 Mãe:</strong> ${data.resultado.mother_name || 'N/A'}</div>
-                    <div class="resultado-item"><strong>👨‍👦 Pai:</strong> ${data.resultado.father_name || 'N/A'}</div>
-                    <div class="resultado-item"><strong>👥 Tipo de Pessoa:</strong> ${data.resultado.person_type === 'F' ? 'Física' : 'Jurídica'}</div>
-                    <div class="resultado-item"><strong>⚧ Gênero:</strong> ${data.resultado.gender || 'N/A'}</div>
-            `);
-
-            // Adicionando informações de empresas
-            if (data.resultado.company_quantity > 0) {
-                const companies = data.resultado.companies.map(company => {
-                    return `<div class="resultado-item"><strong>🏢 Nome da Empresa:</strong> ${company.corporate_name || 'N/A'} - CNPJ: ${company.cnpj || 'N/A'}</div>`;
-                }).join('');
-                novaAba.document.write(`<h3>Empresas:</h3>${companies}`);
-            } else {
-                novaAba.document.write('<p>Nenhuma empresa encontrada.</p>');
-            }
-
-            // Adicionando informações de endereço
-            if (data.resultado.MT && data.resultado.MT.addresses.length > 0) {
-                const addresses = data.resultado.MT.addresses.map(address => {
-                    return `<div class="resultado-item"><strong>🏠 Endereço:</strong> ${address.street1}, ${address.number || 's/n'}, ${address.neighborhood || 'N/A'}, ${address.city_name} - ${address.state} - CEP: ${address.zip}</div>`;
-                }).join('');
-                novaAba.document.write(`<h3>Endereços:</h3>${addresses}`);
-            } else {
-                novaAba.document.write('<p>Nenhum endereço encontrado.</p>');
-            }
-
-            // Adicionando informações de telefone
-            if (data.resultado.MT && data.resultado.MT.phones.length > 0) {
-                const phones = data.resultado.MT.phones.map(phone => {
-                    return `<div class="resultado-item"><strong>📞 Telefone:</strong> (${phone.area_code}) ${phone.phone} - ${phone.carrier_name} <button class="zap-button" onclick="abrirWhatsApp('${phone.area_code}', '${phone.phone}')">ZAP</button></div>`;
-                }).join('');
-                novaAba.document.write(`<h3>Telefones:</h3>${phones}`);
-            } else {
-                novaAba.document.write('<p>Nenhum telefone encontrado.</p>');
-            }
-
-            // Exibir data de vencimento e requisições restantes
-            novaAba.document.write(`<div class="resultado-item"><strong>📅 Data de Vencimento:</strong> ${data.vencimento || 'N/A'}</div>`);
-            novaAba.document.write(`<div class="resultado-item"><strong>🔄 Requisições Restantes:</strong> ${data.requisicoes_restantes || 'N/A'}</div>`);
-            novaAba.document.write('</body></html>');
-        }
-
-        function abrirWhatsApp(ddd, numero) {
-            const url = `https://wa.me/${ddd}${numero}`;
-            window.open(url, '_blank');
-        }
-
-        function pesquisarFacebook(nome) {
-            const url = `https://www.facebook.com/search/top?q=${encodeURIComponent(nome)}`;
-            window.open(url, '_blank');
-        }
-    </script>
-</body>
-</html>
-
-
-
-
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        /* Estilo fixo para o rodapé */
-        #rodape-fixo {
-            position: relative;
-            bottom: 0;
-            left: 0;
-            width: 100%; /* Altera para 100% */
-            background-color: #bdbdbdc7;
-            padding: 10px; /* Ajusta o padding */
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-        #rodape-fixo div {
-            display: relative;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        #rodape-fixo input, #rodape-fixo button {
-            margin: 5px 0; /* Aumenta o espaço entre elementos */
-            width: 90%; /* Ajusta a largura para caber melhor */
-        }
-        #formulario {
-            margin-top: 10px;
-            display: relative;
-        }
-        #cronometro {
-            display: none;
-            font-size: 1.2em; /* Tamanho de fonte relativo */
-            margin-top: 10px;
-        }
-        #botaoRedirecionar {
-            display: none; 
-            margin-top: 10px;
-        }
-        #token {
-            display: none;
-            font-size: 1em; /* Tamanho de fonte relativo */
-            margin-top: 1px;
-            color: green;
-        }
-        #mensagem {
-            color: red;
-            font-size: 0.8em; /* Tamanho de fonte relativo */
-            margin-top: 0px;
-            display: none;
-        }
-        button:disabled {
-            background-color: gray;
-            color: white;
-        }
-        button:enabled {
-            background-color: green;
-            color: white;
-        }
-
-        /* Consultas de mídia para responsividade */
-        @media (max-width: 600px) {
-            #rodape-fixo h1 {
-                font-size: 1.2em; /* Ajusta o tamanho do título em telas pequenas */
-            }
-        }
-    </style>
+    <title>Consulta de CPF</title>
 </head>
 <body>
-    <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="5" />
-    <!-- Conteúdo fixo no rodapé -->
-    <div id="rodape-fixo">
-        <h1>🐾GERE O TOKEN PARA FAZER A CONSULTA GRÁTIS🐾</h1>
-        <div>
-            <input type="text" id="nome" placeholder="Nome" required>
-            <input type="text" id="whatsapp" placeholder="Número de WhatsApp" required pattern="^9\d{8}$" title="O número deve começar com 9 e ter exatamente 11 dígitos.">
-            <button id="gerarToken" onclick="gerarToken()">Gerar Token🐾</button>
-        </div>
-        <div id="token"></div>
-        <div id="mensagem">FAÇA SUA CONSULTA GRÁTIS ANTES QUE O TOKEN EXPIRE</div>
-        <div id="cronometro"></div>
-        <button id="botaoRedirecionar" onclick="window.location.href='https://logingoldenkingbuscas.netlify.app/'">🐾VER PLANOS KING GOLDEN 🐾</button>
+    <h1>Consulta de CPF</h1>
+    <input type="text" id="cpfInput" placeholder="Digite o CPF" />
+    <button id="consultarBtn">Consultar</button>
+
+    <div id="resultado">
+        <h2>Resultados:</h2>
+        <p>CPF: <span id="cpf"></span></p>
+        <p>Nome: <span id="nome"></span></p>
+        <p>Nascimento: <span id="nascimento"></span></p>
+        <p>Renda: <span id="renda"></span></p>
+        <h3>Endereço:</h3>
+        <p id="endereco"></p>
+        
+        <h3>Emails:</h3>
+        <ul id="emails"></ul>
+
+        <h3>Telefones:</h3>
+        <ul id="telefones"></ul>
+
+        <h3>Parentes:</h3>
+        <ul id="parentes"></ul>
     </div>
 
     <script>
-        const tempoLimite = 60 * 1000;
-        let tokenGerado = false;
-        const numerosGerados = JSON.parse(localStorage.getItem('numerosGerados')) || {};
+        document.getElementById('consultarBtn').addEventListener('click', () => {
+            const cpf = document.getElementById('cpfInput').value;
 
-        document.getElementById('consultar').disabled = true;
-
-        function gerarToken() {
-            const whatsapp = document.getElementById('whatsapp').value;
-            const nome = document.getElementById('nome').value;
-
-            if (!nome || !whatsapp) {
-                alert("Por favor, preencha todos os campos.");
-                return;
-            }
-
-            const agora = new Date().getTime();
-            if (numerosGerados[whatsapp] && (agora - numerosGerados[whatsapp].timestamp < 48 * 60 * 60 * 1000)) {
-                alert("Este número já gerou um token nas últimas 48 horas.");
-                return;
-            }
-
-            if (whatsapp.startsWith('3') || whatsapp[2] !== '9' || whatsapp.length !== 11) {
-                alert("Número inválido. O número não pode começar com 3, o terceiro dígito deve ser 9 e deve conter exatamente 11 dígitos.");
-                return;
-            }
-
-            const token = `id-${Math.floor(Math.random() * 1000)}`;
-            document.getElementById('token').innerText = `Seu token: ${token}`;
-            document.getElementById('token').style.display = 'block';
-
-            document.getElementById('mensagem').style.display = 'block';
-
-            startCronometro();
-
-            document.getElementById('consultar').disabled = false;
-
-            numerosGerados[whatsapp] = { timestamp: agora };
-            localStorage.setItem('numerosGerados', JSON.stringify(numerosGerados));
-        }
-
-        function startCronometro() {
-            let tempoRestante = tempoLimite;
-            const cronometroElement = document.getElementById('cronometro');
-            cronometroElement.style.display = 'block';
-
-            const intervalo = setInterval(() => {
-                if (tempoRestante <= 0) {
-                    clearInterval(intervalo);
-                    cronometroElement.innerText = "O tempo para uso do token expirou.";
-                    document.getElementById('botaoRedirecionar').style.display = 'block';
-                    document.getElementById('consultar').disabled = true;
-                    return;
-                }
-
-                const segundos = Math.floor((tempoRestante / 1000) % 60);
-                cronometroElement.innerText = `Tempo restante: ${segundos}s`;
-                tempoRestante -= 1000;
-            }, 1000);
-        }
-
-        document.querySelectorAll('#nome, #whatsapp').forEach(input => {
-            input.addEventListener('input', () => {
-                const nomePreenchido = document.getElementById('nome').value.trim() !== '';
-                const whatsappPreenchido = document.getElementById('whatsapp').value.trim() !== '' && document.getElementById('whatsapp').value.length === 11;
-                document.getElementById('gerarToken').disabled = !(nomePreenchido && whatsappPreenchido);
-            });
+            fetch(`/consulta-cpf/${cpf}`) // Substitua URL_DA_API pela URL real da sua API
+                .then(response => response.json())
+                .then(data => mostrarResultados(data))
+                .catch(error => console.error('Erro ao buscar dados:', error));
         });
+
+        function mostrarResultados(data) {
+            // Limpar os resultados anteriores
+            document.getElementById('resultado').innerHTML = '';
+
+            // Mostrar CPF
+            const cpfElement = document.createElement('p');
+            cpfElement.innerHTML = `CPF: <span id="cpf">${data.CPF}</span>`;
+            document.getElementById('resultado').appendChild(cpfElement);
+
+            // Exibir dados do Nome
+            const nomeElement = document.createElement('p');
+            nomeElement.innerHTML = `Nome: <span id="nome">${data.NOME}</span>`;
+            document.getElementById('resultado').appendChild(nomeElement);
+
+            // Exibir Nascimento
+            const nascimentoElement = document.createElement('p');
+            nascimentoElement.innerHTML = `Nascimento: <span id="nascimento">${data.NASCIMENTO}</span>`;
+            document.getElementById('resultado').appendChild(nascimentoElement);
+
+            // Exibir Renda
+            const rendaElement = document.createElement('p');
+            rendaElement.innerHTML = `Renda: <span id="renda">${data.RENDA}</span>`;
+            document.getElementById('resultado').appendChild(rendaElement);
+
+            // Exibir Endereço
+            if (data.ENDERECO.length > 0) {
+                const endereco = data.ENDERECO[0];
+                const enderecoElement = document.createElement('p');
+                enderecoElement.innerHTML = `Endereço: ${endereco.LOGRADOURO} ${endereco.LOGRADOURO_NUMERO}, ${endereco.COMPLEMENTO}, ${endereco.BAIRRO}, ${endereco.CIDADE} - ${endereco.UF}, CEP: ${endereco.CEP}`;
+                document.getElementById('resultado').appendChild(enderecoElement);
+            }
+
+            // Exibir Emails
+            if (data.EMAIL.length > 0) {
+                const emailList = document.createElement('ul');
+                data.EMAIL.forEach(email => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `${email.EMAIL} (Score: ${email.EMAIL_SCORE})`;
+                    emailList.appendChild(li);
+                });
+                document.getElementById('resultado').appendChild(emailList);
+            }
+
+            // Exibir Telefones
+            if (data.TELEFONES.length > 0) {
+                const telefoneList = document.createElement('ul');
+                data.TELEFONES.forEach(telefone => {
+                    const li = document.createElement('li');
+                    li.textContent = telefone.NUMBER;
+                    telefoneList.appendChild(li);
+                });
+                document.getElementById('resultado').appendChild(telefoneList);
+            }
+
+            // Exibir Parentes
+            if (data.PARENTES.length > 0) {
+                const parentesList = document.createElement('ul');
+                data.PARENTES.forEach(parente => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `${parente.NOME_VINCULO} (Vínculo: ${parente.VINCULO})`;
+                    parentesList.appendChild(li);
+                });
+                document.getElementById('resultado').appendChild(parentesList);
+            }
+        }
     </script>
 </body>
+
+
 <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="10" />
 <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="30" />
 <img src="https://media.giphy.com/media/QXhbkMLE3teKMsEIIF/giphy.gif" alt="GIF Description" width="400" height="15" />
