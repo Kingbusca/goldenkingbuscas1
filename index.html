@@ -58,40 +58,6 @@
             margin-bottom: 10px; /* Espaço entre campos */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .tabs {
-            display: flex;
-            cursor: pointer;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #e7e7e7;
-            border-radius: 4px;
-        }
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 4px 4px 0 0;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s;
-        }
-        .tab:hover {
-            background-color: #ddd;
-        }
-        .tab.active {
-            background-color: #fff;
-            border-bottom: 1px solid transparent;
-        }
-        .tab-content {
-            display: none;
-            border: 1px solid #ddd;
-            border-radius: 0 0 4px 4px;
-            padding: 10px;
-            background-color: #fff;
-        }
-        .tab-content.active {
-            display: block;
-        }
         .socios {
             margin: 10px 0;
             padding: 10px;
@@ -122,7 +88,8 @@
 
     <div class="consulta-quadro">
         <h2>🔍Consulta CNPJ📈</h2>
-        <h2> <span style="color: rgb(12, 255, 52);">On</span></h2>
+        <h2> <span style="color: rgb(12, 255, 52);">On</span></p>
+        <p> <span style="color: blue;"></span> </p>
         <input type="text" id="cnpj" placeholder="Digite o CNPJ">
         <br>
         <button id="consultar">Consultar</button>
@@ -141,7 +108,7 @@
             }
 
             // Faz a requisição para o proxy configurado no Netlify
-            fetch(`/consulta/${cnpj}`) // Certifique-se de que o caminho está correto
+            fetch(`/consulta/${cnpj}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erro ao buscar o CNPJ. Verifique o número e tente novamente.');
@@ -149,66 +116,55 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Cria abas e conteúdo
+                    // Exibe o resultado formatado com emojis em caixas de texto separadas
                     let resultadoHTML = `
-                        <div class="tabs">
-                            <div class="tab active" onclick="showTab('info')">Informações</div>
-                            <div class="tab" onclick="showTab('socios')">Sócios</div>
+                        <div class="campo">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
+                        <div class="campo">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
+                        <div class="campo">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
+                        <div class="campo">☎️ <strong>Telefone:</strong> ${data.telefone ? data.telefone.split(',').map(tel => `${tel.trim()} <button onclick="copyToClipboard('${tel.trim()}')">Copiar</button>`).join('<br>') : 'N/A'}</div>
+                        <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
+                        <div class="campo">📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
+                        <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
+                        <div class="campo">🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}</div>
+                        <div class="campo">🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
+                        <div class="campo">📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
+                        <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
+                        <div class="socios">
+                            <strong>👥 Sócios:</strong><br>
+                            ${data.qsa.map(socio => `
+                                <div>${socio.nome} - ${socio.qual} 
+                                <button class="socio-button" onclick="searchFacebook('${socio.nome}')">Facebook</button></div>
+                            `).join('') || 'N/A'}
                         </div>
-                        <div class="tab-content active" id="info">
-                            <div class="campo">📜 <strong>Razão Social:</strong> ${data.nome || 'N/A'}</div>
-                            <div class="campo">🏢 <strong>Nome Fantasia:</strong> ${data.fantasia || 'N/A'}</div>
-                            <div class="campo">📍 <strong>Endereço:</strong> ${data.logradouro || 'N/A'}, ${data.numero || 'N/A'}, ${data.bairro || 'N/A'}, ${data.municipio || 'N/A'}, ${data.uf || 'N/A'}</div>
-                            <div class="campo">☎️ <strong>Telefone:</strong> ${data.telefone ? data.telefone.split(',').map(tel => `${tel.trim()} <button onclick="copyToClipboard('${tel.trim()}')">Copiar</button>`).join('<br>') : 'N/A'}</div>
-                            <div class="campo">📧 <strong>Email:</strong> ${data.email || 'N/A'}</div>
-                            <div class="campo">📅 <strong>Data de Abertura:</strong> ${data.abertura || 'N/A'}</div>
-                            <div class="campo">🔍 <strong>Situação:</strong> ${data.situacao || 'N/A'}</div>
-                            <div class="campo">🔒 <strong>Capital Social:</strong> R$ ${data.capital_social || 'N/A'}</div>
-                            <div class="campo">🏛️ <strong>Tipo:</strong> ${data.tipo || 'N/A'}</div>
-                            <div class="campo">📆 <strong>Data da Situação:</strong> ${data.data_situacao || 'N/A'}</div>
-                            <div class="campo">🔄 <strong>Última Atualização:</strong> ${data.ultima_atualizacao || 'N/A'}</div>
-                        </div>
-                        <div class="tab-content" id="socios">
-                            <div class="socios">
-                                <strong>👥 Sócios:</strong><br>
-                                ${data.qsa.map(socio => `
-                                    <div>${socio.nome} - ${socio.qualificacao} 
-                                    <button class="socio-button" onclick="copyToClipboard('${socio.nome}')">Copiar Nome</button>
-                                    </div>
-                                `).join('') || 'N/A'}
-                            </div>
-                        </div>
+                        <div class="campo">📝 <strong>Natureza Jurídica:</strong> ${data.natureza_juridica || 'N/A'}</div>
+                        <div class="campo">💼 <strong>Atividade Principal:</strong> ${data.atividade_principal[0]?.text || 'N/A'}</div>
+                        <div class="campo">📋 <strong>Atividades Secundárias:</strong> ${data.atividades_secundarias.map(atividade => atividade.text).join(', ') || 'N/A'}</div>
+                        <div class="campo">🗓️ <strong>Data de Situação Especial:</strong> ${data.data_situacao_especial || 'N/A'}</div>
+                        <div class="campo">🔒 <strong>Motivo da Situação:</strong> ${data.motivo_situacao || 'N/A'}</div>
                     `;
                     document.getElementById('resultado').innerHTML = resultadoHTML;
                 })
                 .catch(error => {
+                    console.error('Erro:', error);
                     document.getElementById('resultado').innerText = error.message;
                 });
         });
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => {
-                    alert(`Copiado: ${text}`);
-                })
-                .catch(err => {
-                    console.error('Erro ao copiar: ', err);
-                });
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Número copiado para a área de transferência!');
+            }, (err) => {
+                console.error('Erro ao copiar: ', err);
+            });
         }
 
-        function showTab(tabId) {
-            const tabs = document.querySelectorAll('.tab');
-            const contents = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-
-            document.querySelector(`.tab-content#${tabId}`).classList.add('active');
-            document.querySelector(`.tab#${tabId}`).classList.add('active');
+        function searchFacebook(name) {
+            const searchUrl = `https://www.facebook.com/search/top/?q=${encodeURIComponent(name)}`;
+            window.open(searchUrl, '_blank');
         }
     </script>
 </body>
 </html>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
